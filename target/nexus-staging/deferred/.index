@@ -1,0 +1,5 @@
+com/marsoft/adminvic/adminvic-application/0.0.1-SNAPSHOT/adminvic-application-0.0.1-SNAPSHOT.pom=com.marsoft.adminvic:adminvic-application:0.0.1-SNAPSHOT:n/a:pom:pom:n/a:n/a
+com/marsoft/adminvic/persistence/0.0.1-SNAPSHOT/persistence-0.0.1-SNAPSHOT.jar=com.marsoft.adminvic:persistence:0.0.1-SNAPSHOT:n/a:jar:jar:persistence-0.0.1-SNAPSHOT.pom:n/a
+com/marsoft/adminvic/domain/0.0.1-SNAPSHOT/domain-0.0.1-SNAPSHOT.jar=com.marsoft.adminvic:domain:0.0.1-SNAPSHOT:n/a:jar:jar:domain-0.0.1-SNAPSHOT.pom:n/a
+com/marsoft/adminvic/web/0.0.1-SNAPSHOT/web-0.0.1-SNAPSHOT.jar=com.marsoft.adminvic:web:0.0.1-SNAPSHOT:n/a:jar:jar:web-0.0.1-SNAPSHOT.pom:n/a
+com/marsoft/adminvic/boot/0.0.1-SNAPSHOT/boot-0.0.1-SNAPSHOT.jar=com.marsoft.adminvic:boot:0.0.1-SNAPSHOT:n/a:jar:jar:boot-0.0.1-SNAPSHOT.pom:n/a

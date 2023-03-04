@@ -1,0 +1,29 @@
+# Swagger
+#http://localhost:9000/adminvic-admin-api/v1/swagger-ui/#/
+spring:
+  application:
+    name: adminvic-admin-api
+    version: v1
+  config:
+    activate:
+      on-profile: default
+  couchbase:
+    username: Administrator
+    connectionString: couchbase://127.0.0.1
+    bootstrap-hosts: 127.0.0.1
+    bucket:
+      name: adminvic
+      password: ENC(vUxW/1scC82TU442U/W+dnYiajHTkhTmvVkj3g/s3ZCk6VL2E0vcMqevf7gx7EXN)
+  data:
+    couchbase:
+      auto-index: true
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+server:
+  port: 9000
+  use-forward-headers: false
+  servlet:
+    context-path: /${spring.application.name}/${spring.application.version}
