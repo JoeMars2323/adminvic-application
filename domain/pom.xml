@@ -70,6 +70,7 @@
 		</dependency>
 	</dependencies>
 
+	<!--this is for projects without main class-->
 	<build>
 		<plugins>
 			<plugin>
