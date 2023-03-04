@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>domain</artifactId>
-	<name>dminvic-domain</name>
+	<name>adminvic-domain</name>
 	<description>adminvic-application domain module</description>
 	<packaging>jar</packaging>
 
