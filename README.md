@@ -1,2 +1,1 @@
 # adminvic-application
-# adminvic-application

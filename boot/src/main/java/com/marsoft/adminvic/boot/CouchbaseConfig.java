@@ -18,8 +18,8 @@ public class CouchbaseConfig extends AbstractCouchbaseConfiguration {
 	@Value("${spring.couchbase.connectionString}")
 	private String connectionString;
 
-	// @Value("${spring.couchbase.bucket.password}")
-	// private String password;
+	@Value("${couchbasePassword}")
+	private String password;
 
 	@Override
 	public String getUserName() {
@@ -38,7 +38,7 @@ public class CouchbaseConfig extends AbstractCouchbaseConfiguration {
 
 	@Override
 	public String getPassword() {
-		return "C0uchbas3";
+		return password;
 	}
 
 }
