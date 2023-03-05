@@ -61,6 +61,19 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<!-- Sets the path to the file wich contains the execution data -->
+							<dataFile>target/jacoco.exec</dataFile>
+							<!-- Sets the output directory for the coverage report -->
+							<outputDirectory>target/adminvic-report</outputDirectory>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
