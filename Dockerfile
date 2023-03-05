@@ -3,6 +3,7 @@ COPY pom.xml /tmp/
 COPY boot /tmp/boot/
 COPY domain /tmp/domain/
 COPY persistence /tmp/persistence/
+COPY jacoco /tmp/jacoco/
 COPY web /tmp/web/
 WORKDIR /tmp/
 RUN mvn clean install -Pdocker
