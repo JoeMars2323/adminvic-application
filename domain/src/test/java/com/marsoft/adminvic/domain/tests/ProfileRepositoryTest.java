@@ -1,4 +1,4 @@
-package com.marsoft.adminvic.jacoco.junit;
+package com.marsoft.adminvic.domain.tests;
 
 import org.junit.jupiter.api.Test;
 
