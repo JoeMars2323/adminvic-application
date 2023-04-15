@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,11 +18,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.AdminVicResponse;
 import com.marsoft.adminvic.domain.response.FilmRest;
 import com.marsoft.adminvic.domain.service.FilmService;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
+@CrossOrigin
 @RestController
 @RequestMapping(RestConstants.FILMS)
 public class FilmController {
@@ -31,44 +32,38 @@ public class FilmController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.FILM_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<FilmRest> getFilmById(@PathVariable Long id) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				filmService.getFilmById(id));
+	public FilmRest getFilmById(@PathVariable Long id) throws AdminVicException {
+		return filmService.getFilmById(id);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<List<FilmRest>> getAllFilms() throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				filmService.getAllFilms());
+	public List<FilmRest> getAllFilms() throws AdminVicException {
+		return filmService.getAllFilms();
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<FilmRest> createFilm(@RequestBody FilmRest filmRest) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				filmService.createFilm(filmRest));
+	public FilmRest createFilm(@RequestBody FilmRest filmRest) throws AdminVicException {
+		return filmService.createFilm(filmRest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<FilmRest> updateFilm(@RequestBody FilmRest filmRest) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				filmService.updateFilm(filmRest));
+	public FilmRest updateFilm(@RequestBody FilmRest filmRest) throws AdminVicException {
+		return filmService.updateFilm(filmRest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = RestConstants.FILM_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<FilmRest> deleteFilm(@PathVariable Long id) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				filmService.deleteFilm(id));
+	public FilmRest deleteFilm(@PathVariable Long id) throws AdminVicException {
+		return filmService.deleteFilm(id);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.FILM_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<FilmRest> deleteFilmPhysically(@PathVariable Long id) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				filmService.deleteFilmPhysically(id));
+	public FilmRest deleteFilmPhysically(@PathVariable Long id) throws AdminVicException {
+		return filmService.deleteFilmPhysically(id);
 	}
 
 }

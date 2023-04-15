@@ -54,6 +54,8 @@ public class RestConstants {
 	public static final String SUCCESS = "Success";
 	public static final String OK = "OK";
 
+	public static final String FRONTEND_URL = "http://localhost:4200/actors";
+
 	private RestConstants() {
 		throw new IllegalStateException("Utility class");
 	}

@@ -117,11 +117,13 @@ public class ActorServiceImpl implements ActorService {
 		log.info("Creating actor...");
 		ActorRest actorResponse = null;
 		try {
+			actorRest.setId(actorRepository.getLastId() + 1);
 			Actor actor = modelMapper.map(actorRest, Actor.class);
 			actor.setInsertDate(String.valueOf(new Date()));
 			actorResponse = modelMapper.map(actorRepository.save(actor), ActorRest.class);
 			log.info("Actor created");
 		} catch (Exception e) {
+			log.info(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
 			sb.append(ERROR_MESSAGE);
 			sb.append(e.getMessage());
