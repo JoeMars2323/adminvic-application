@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.AdminVicResponse;
 import com.marsoft.adminvic.domain.response.TvserieRest;
 import com.marsoft.adminvic.domain.service.TvserieService;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
+@CrossOrigin
 @RestController
 @RequestMapping(RestConstants.TV_SERIES)
-@CrossOrigin(origins = RestConstants.FRONTEND_URL)
 public class TvserieController {
 
 	@Autowired
@@ -33,44 +32,38 @@ public class TvserieController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.TV_SERIE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<TvserieRest> getTvseriesById(@PathVariable Long id) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				tvserieService.getTvserieById(id));
+	public TvserieRest getTvseriesById(@PathVariable Long id) throws AdminVicException {
+		return tvserieService.getTvserieById(id);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<List<TvserieRest>> getAllTvseries() throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				tvserieService.getAllTvseries());
+	public List<TvserieRest> getAllTvseries() throws AdminVicException {
+		return tvserieService.getAllTvseries();
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<TvserieRest> createTvserie(@RequestBody TvserieRest tvserieRest) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				tvserieService.createTvserie(tvserieRest));
+	public TvserieRest createTvserie(@RequestBody TvserieRest tvserieRest) throws AdminVicException {
+		return tvserieService.createTvserie(tvserieRest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<TvserieRest> updateTvserie(@RequestBody TvserieRest tvserieRest) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				tvserieService.updateTvserie(tvserieRest));
+	public TvserieRest updateTvserie(@RequestBody TvserieRest tvserieRest) throws AdminVicException {
+		return tvserieService.updateTvserie(tvserieRest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = RestConstants.TV_SERIE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<TvserieRest> deleteTvserie(@PathVariable Long id) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				tvserieService.deleteTvserie(id));
+	public TvserieRest deleteTvserie(@PathVariable Long id) throws AdminVicException {
+		return tvserieService.deleteTvserie(id);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.TV_SERIE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<TvserieRest> deleteTvseriePhysically(@PathVariable Long id) throws AdminVicException {
-		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
-				tvserieService.deleteTvseriePhysically(id));
+	public TvserieRest deleteTvseriePhysically(@PathVariable Long id) throws AdminVicException {
+		return tvserieService.deleteTvseriePhysically(id);
 	}
 
 }

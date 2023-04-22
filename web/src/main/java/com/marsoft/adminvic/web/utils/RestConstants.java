@@ -6,6 +6,7 @@ public class RestConstants {
 	public static final String ACTORS = "/actors";
 	public static final String ACTOR_ID = "/actor/{id}";
 	public static final String ACTOR_NAME = "/name/{name}";
+	public static final String ACTOR_DELETE = "/actor/delete/{id}";
 
 	public static final String AWARD = "/award";
 	public static final String AWARDS = "/awards";

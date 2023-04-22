@@ -10,6 +10,7 @@ com/marsoft/adminvic/domain/service/ChapterServiceImpl.class
 com/marsoft/adminvic/domain/service/FilmService.class
 com/marsoft/adminvic/domain/response/VisualizationRest.class
 com/marsoft/adminvic/domain/response/SubscriptionRest.class
+com/marsoft/adminvic/domain/utils/LogsConstants.class
 com/marsoft/adminvic/domain/service/RecommendedAgeServiceImpl.class
 com/marsoft/adminvic/domain/exception/AdminVicRestExceptionHandler.class
 com/marsoft/adminvic/domain/response/CategoryRest.class
@@ -31,7 +32,6 @@ com/marsoft/adminvic/domain/service/VisualizationServiceImpl.class
 com/marsoft/adminvic/domain/service/AwardServiceImpl.class
 com/marsoft/adminvic/domain/service/TvserieService.class
 com/marsoft/adminvic/domain/response/TvserieRest.class
-com/marsoft/adminvic/domain/utils/ExceptionConstants.class
 com/marsoft/adminvic/domain/service/RecommendationService.class
 com/marsoft/adminvic/domain/service/FilmServiceImpl.class
 com/marsoft/adminvic/domain/service/CategoryServiceImpl.class

@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -61,7 +60,7 @@ public class ActorController {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@PatchMapping(value = RestConstants.ACTOR_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = RestConstants.ACTOR_DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ActorRest deleteActor(@PathVariable Long id) throws AdminVicException {
 		return actorService.deleteActor(id);
 	}
