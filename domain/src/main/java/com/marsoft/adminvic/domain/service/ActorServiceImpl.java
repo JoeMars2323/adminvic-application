@@ -1,6 +1,5 @@
 package com.marsoft.adminvic.domain.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,12 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
 import com.marsoft.adminvic.domain.response.ActorRest;
-import com.marsoft.adminvic.domain.response.AwardRest;
 import com.marsoft.adminvic.domain.utils.LogsConstants;
 import com.marsoft.adminvic.persistence.entity.Actor;
-import com.marsoft.adminvic.persistence.entity.Award;
 import com.marsoft.adminvic.persistence.repository.ActorRepository;
-import com.marsoft.adminvic.persistence.repository.AwardRepository;
+import com.marsoft.adminvic.persistence.solr.entity.ActorSolr;
+import com.marsoft.adminvic.persistence.solr.repository.ActorSolrRepository;
 
 @Service
 public class ActorServiceImpl implements ActorService {
@@ -32,7 +30,7 @@ public class ActorServiceImpl implements ActorService {
 	private ActorRepository actorRepository;
 
 	@Autowired
-	private AwardRepository awardRepository;
+	private ActorSolrRepository actorSolrRepository;
 
 	@Override
 	public ActorRest getActorById(Long id) throws AdminVicException {
@@ -40,7 +38,7 @@ public class ActorServiceImpl implements ActorService {
 		ActorRest actorResponse = null;
 		try {
 			actorResponse = modelMapper.map(actorRepository.findById(id).orElse(null), ActorRest.class);
-			if (actorResponse != null) {
+			if (actorResponse != null && !actorResponse.getDeleted()) {
 				log.info(LogsConstants.ACTOR_FOUND);
 			} else {
 				log.error(LogsConstants.ACTOR_NOT_FOUND);
@@ -58,21 +56,13 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	@Override
-	public ActorRest getActorByName(String actorName) throws AdminVicException {
+	// only available for search engine
+	public ActorSolr getActorByName(String actorName) throws AdminVicException {
 		log.info(LogsConstants.GETTING_ACTOR);
-		List<AwardRest> awardRestList = new ArrayList<>();
-		ActorRest actorResponse = null;
+		ActorSolr actorSolr = null;
 		try {
-			actorResponse = modelMapper.map(actorRepository.findByName(actorName), ActorRest.class);
-			if (actorResponse != null) {
-				List<Award> awardList = awardRepository.getAwardsByActorId(actorResponse.getId());
-				if (awardList != null) {
-					for (Award a : awardList) {
-						AwardRest awardRest = modelMapper.map(a, AwardRest.class);
-						awardRestList.add(awardRest);
-					}
-					actorResponse.setAwardsList(awardRestList);
-				}
+			actorSolr = actorSolrRepository.findByName(actorName);
+			if (actorSolr != null && !actorSolr.getDeleted()) {
 				log.info(LogsConstants.ACTOR_FOUND);
 			} else {
 				log.error(LogsConstants.ACTOR_NOT_FOUND);
@@ -86,7 +76,7 @@ public class ActorServiceImpl implements ActorService {
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
-		return actorResponse;
+		return actorSolr;
 	}
 
 	@Override
@@ -94,11 +84,6 @@ public class ActorServiceImpl implements ActorService {
 		log.info(LogsConstants.GETTING_ALL_ACTORS);
 		List<ActorRest> actorsResponseList = null;
 		try {
-			/*
-			 * need to create an primary index in couchbase to use findAll because it used
-			 * N1QL. CREATE PRIMARY INDEX `adminvic_primary_index` ON
-			 * `default`:`adminvic`.`dev`.`actor` USING GSI;
-			 */
 			actorsResponseList = actorRepository.findAll().stream().filter(x -> !x.getDeleted())
 					.map(actor -> modelMapper.map(actor, ActorRest.class)).collect(Collectors.toList());
 			if (!actorsResponseList.isEmpty()) {
@@ -124,14 +109,32 @@ public class ActorServiceImpl implements ActorService {
 		log.info(LogsConstants.CREATING_ACTOR);
 		ActorRest actorResponse = null;
 		try {
+			// add manually document id
 			actorRest.setId(actorRepository.getLastId() + 1);
+
 			Actor actor = modelMapper.map(actorRest, Actor.class);
+
+			// set variables to insert in couchbase
 			actor.setInsertDate(String.valueOf(new Date()));
 			actor.setDeleted(false);
 			actor.setChanged(true);
+
+			// insert in couchbase
 			actorResponse = modelMapper.map(actorRepository.save(actor), ActorRest.class);
+
+			// check if the insertion in couchbase was successful
 			if (actorResponse != null) {
 				log.info(LogsConstants.ACTOR_CREATED);
+
+				ActorSolr actorSolr = modelMapper.map(actorRest, ActorSolr.class);
+
+				// set variables to insert in solr
+				actorSolr.setInsertDate(String.valueOf(new Date()));
+				actorSolr.setDeleted(false);
+				actorSolr.setChanged(true);
+
+				// insert in apache solr
+				actorSolrRepository.save(actorSolr);
 			} else {
 				log.error(LogsConstants.ACTOR_NOT_CREATED);
 				throw new NotFoundException(LogsConstants.ACTOR_NOT_CREATED);
@@ -155,11 +158,23 @@ public class ActorServiceImpl implements ActorService {
 				ActorRest.class);
 		if (actorResponse != null) {
 			try {
+
 				Actor actor = modelMapper.map(actorRest, Actor.class);
 				actor.setUpdatedDate(String.valueOf(new Date()));
+				actor.setChanged(true);
+
+				// update in couchbase
 				actor = actorRepository.save(actor);
 				actorResponse = modelMapper.map(actor, ActorRest.class);
 				log.info(LogsConstants.ACTOR_UPDATED);
+
+				ActorSolr actorSolr = modelMapper.map(actorRest, ActorSolr.class);
+				actorSolr.setUpdatedDate(String.valueOf(new Date()));
+				actorSolr.setChanged(true);
+
+				// update in apache solr
+				actorSolrRepository.save(actorSolr);
+
 			} catch (Exception e) {
 				log.error(LogsConstants.ERROR_MESSAGE);
 				log.error(e.getLocalizedMessage());

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.response.ActorRest;
 import com.marsoft.adminvic.domain.service.ActorService;
+import com.marsoft.adminvic.persistence.solr.entity.ActorSolr;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
 @CrossOrigin
@@ -37,7 +38,7 @@ public class ActorController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.ACTOR_NAME, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ActorRest getActorByName(@PathVariable String name) throws AdminVicException {
+	public ActorSolr getActorByName(@PathVariable String name) throws AdminVicException {
 		return actorService.getActorByName(name);
 	}
 

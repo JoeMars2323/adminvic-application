@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.marsoft.adminvic</groupId>
 		<artifactId>adminvic-application</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>persistence</artifactId>
@@ -21,6 +21,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-couchbase</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-solr</artifactId>
+			<version>4.3.14</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<!--this is for projects without main class-->

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.response.ActorRest;
+import com.marsoft.adminvic.persistence.solr.entity.ActorSolr;
 
 public interface ActorService {
 
@@ -19,6 +20,6 @@ public interface ActorService {
 
 	ActorRest deleteActorPhysically(Long id) throws AdminVicException;
 
-	ActorRest getActorByName(String actorName) throws AdminVicException;
+	ActorSolr getActorByName(String actorName) throws AdminVicException;
 
 }

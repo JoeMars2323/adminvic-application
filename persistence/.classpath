@@ -34,5 +34,14 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/joemars/.m2/repository/org/apache/solr/solr-solrj/8.11.2/solr-solrj-8.11.2.jar" sourcepath="/Users/joemars/.m2/repository/org/apache/solr/solr-solrj/8.11.2/solr-solrj-8.11.2-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="org.apache.solr"/>
+			<attribute name="maven.artifactId" value="solr-solrj"/>
+			<attribute name="maven.version" value="8.11.2"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
