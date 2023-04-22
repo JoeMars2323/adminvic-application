@@ -15,6 +15,7 @@
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/response/ActorRest.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/service/TvserieServiceImpl.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/DomainConfig.java
+/Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/utils/LogsConstants.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/service/RecommendedAgeService.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/exception/InternalServerErrorException.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/service/CategoryServiceImpl.java
@@ -31,7 +32,6 @@
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/response/TvserieRest.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/response/SeasonRest.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/service/ProfileService.java
-/Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/utils/ExceptionConstants.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/service/SeasonServiceImpl.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/service/ProfileServiceImpl.java
 /Users/joemars/Personal/Dev/eclipse-workspace/adminvic-application/domain/src/main/java/com/marsoft/adminvic/domain/exception/AdminVicException.java

@@ -16,6 +16,7 @@ import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
 import com.marsoft.adminvic.domain.response.ActorRest;
 import com.marsoft.adminvic.domain.response.AwardRest;
+import com.marsoft.adminvic.domain.utils.LogsConstants;
 import com.marsoft.adminvic.persistence.entity.Actor;
 import com.marsoft.adminvic.persistence.entity.Award;
 import com.marsoft.adminvic.persistence.repository.ActorRepository;
@@ -25,12 +26,7 @@ import com.marsoft.adminvic.persistence.repository.AwardRepository;
 public class ActorServiceImpl implements ActorService {
 
 	private Logger log = LoggerFactory.getLogger(ActorServiceImpl.class);
-
 	private ModelMapper modelMapper = new ModelMapper();
-
-	private static final String ERROR_MESSAGE = "ERROR: ";
-	private static final String ACTOR_NOT_FOUND = "Actor not found!";
-	private static final String ACTORS_NOT_FOUND = "Actors not found!";
 
 	@Autowired
 	private ActorRepository actorRepository;
@@ -40,18 +36,21 @@ public class ActorServiceImpl implements ActorService {
 
 	@Override
 	public ActorRest getActorById(Long id) throws AdminVicException {
-		log.info("Geting actor...");
+		log.info(LogsConstants.CREATING_ACTOR);
 		ActorRest actorResponse = null;
 		try {
 			actorResponse = modelMapper.map(actorRepository.findById(id).orElse(null), ActorRest.class);
 			if (actorResponse != null) {
-				log.info("Actor found");
+				log.info(LogsConstants.ACTOR_FOUND);
 			} else {
-				throw new NotFoundException(ACTOR_NOT_FOUND);
+				log.error(LogsConstants.ACTOR_NOT_FOUND);
+				throw new NotFoundException(LogsConstants.ACTOR_NOT_FOUND);
 			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -60,7 +59,7 @@ public class ActorServiceImpl implements ActorService {
 
 	@Override
 	public ActorRest getActorByName(String actorName) throws AdminVicException {
-		log.info("Geting actor...");
+		log.info(LogsConstants.GETTING_ACTOR);
 		List<AwardRest> awardRestList = new ArrayList<>();
 		ActorRest actorResponse = null;
 		try {
@@ -74,11 +73,16 @@ public class ActorServiceImpl implements ActorService {
 					}
 					actorResponse.setAwardsList(awardRestList);
 				}
-
+				log.info(LogsConstants.ACTOR_FOUND);
+			} else {
+				log.error(LogsConstants.ACTOR_NOT_FOUND);
+				throw new NotFoundException(LogsConstants.ACTOR_NOT_FOUND);
 			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -87,7 +91,7 @@ public class ActorServiceImpl implements ActorService {
 
 	@Override
 	public List<ActorRest> getAllActors() throws AdminVicException {
-		log.info("Geting all available actors...");
+		log.info(LogsConstants.GETTING_ALL_ACTORS);
 		List<ActorRest> actorsResponseList = null;
 		try {
 			/*
@@ -95,16 +99,19 @@ public class ActorServiceImpl implements ActorService {
 			 * N1QL. CREATE PRIMARY INDEX `adminvic_primary_index` ON
 			 * `default`:`adminvic`.`dev`.`actor` USING GSI;
 			 */
-			actorsResponseList = actorRepository.findAll().stream()
+			actorsResponseList = actorRepository.findAll().stream().filter(x -> !x.getDeleted())
 					.map(actor -> modelMapper.map(actor, ActorRest.class)).collect(Collectors.toList());
 			if (!actorsResponseList.isEmpty()) {
-				log.info("Actors found");
+				log.info(LogsConstants.ACTORS_FOUND);
 			} else {
-				throw new NotFoundException(ACTORS_NOT_FOUND);
+				log.error(LogsConstants.ACTORS_NOT_FOUND);
+				throw new NotFoundException(LogsConstants.ACTORS_NOT_FOUND);
 			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -114,16 +121,26 @@ public class ActorServiceImpl implements ActorService {
 	@Override
 	@Transactional
 	public ActorRest createActor(ActorRest actorRest) throws AdminVicException {
-		log.info("Creating actor...");
+		log.info(LogsConstants.CREATING_ACTOR);
 		ActorRest actorResponse = null;
 		try {
+			actorRest.setId(actorRepository.getLastId() + 1);
 			Actor actor = modelMapper.map(actorRest, Actor.class);
 			actor.setInsertDate(String.valueOf(new Date()));
+			actor.setDeleted(false);
+			actor.setChanged(true);
 			actorResponse = modelMapper.map(actorRepository.save(actor), ActorRest.class);
-			log.info("Actor created");
+			if (actorResponse != null) {
+				log.info(LogsConstants.ACTOR_CREATED);
+			} else {
+				log.error(LogsConstants.ACTOR_NOT_CREATED);
+				throw new NotFoundException(LogsConstants.ACTOR_NOT_CREATED);
+			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -133,7 +150,7 @@ public class ActorServiceImpl implements ActorService {
 	@Override
 	@Transactional
 	public ActorRest updateActor(ActorRest actorRest) throws AdminVicException {
-		log.info("Updating actor...");
+		log.info(LogsConstants.UPDATING_ACTOR);
 		ActorRest actorResponse = modelMapper.map(actorRepository.findById(actorRest.getId()).orElse(null),
 				ActorRest.class);
 		if (actorResponse != null) {
@@ -142,15 +159,18 @@ public class ActorServiceImpl implements ActorService {
 				actor.setUpdatedDate(String.valueOf(new Date()));
 				actor = actorRepository.save(actor);
 				actorResponse = modelMapper.map(actor, ActorRest.class);
-				log.info("Actor updated");
+				log.info(LogsConstants.ACTOR_UPDATED);
 			} catch (Exception e) {
+				log.error(LogsConstants.ERROR_MESSAGE);
+				log.error(e.getLocalizedMessage());
 				StringBuilder sb = new StringBuilder();
-				sb.append(ERROR_MESSAGE);
+				sb.append(LogsConstants.ERROR_MESSAGE);
 				sb.append(e.getMessage());
 				throw new NotFoundException(sb.toString());
 			}
 		} else {
-			throw new NotFoundException(ACTOR_NOT_FOUND);
+			log.error(LogsConstants.ACTOR_NOT_FOUND);
+			throw new NotFoundException(LogsConstants.ACTOR_NOT_FOUND);
 		}
 		return actorResponse;
 	}
@@ -158,7 +178,7 @@ public class ActorServiceImpl implements ActorService {
 	@Override
 	@Transactional
 	public ActorRest deleteActor(Long id) throws AdminVicException {
-		log.info("Deliting actor...");
+		log.info(LogsConstants.DELETING_ACTOR);
 		ActorRest actorResponse = null;
 		try {
 			Actor actor = actorRepository.findById(id).orElse(null);
@@ -166,13 +186,16 @@ public class ActorServiceImpl implements ActorService {
 				actor.setDeleted(true);
 				actor = actorRepository.save(actor);
 				actorResponse = modelMapper.map(actor, ActorRest.class);
-				log.info("Actor deleted");
+				log.info(LogsConstants.ACTOR_DELETED);
 			} else {
-				throw new NotFoundException(ACTOR_NOT_FOUND);
+				log.error(LogsConstants.ACTOR_NOT_FOUND);
+				throw new NotFoundException(LogsConstants.ACTOR_NOT_FOUND);
 			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -182,20 +205,23 @@ public class ActorServiceImpl implements ActorService {
 	@Override
 	@Transactional
 	public ActorRest deleteActorPhysically(Long id) throws AdminVicException {
-		log.info("Deliting actor physically...");
+		log.info(LogsConstants.DELETING_ACTOR_PHISICALLY);
 		ActorRest actorResponse = null;
 		try {
 			Actor actor = actorRepository.findById(id).orElse(null);
 			if (actor != null) {
 				actorRepository.delete(actor);
 				actorResponse = modelMapper.map(actor, ActorRest.class);
-				log.info("Actor deleted physically");
+				log.info(LogsConstants.ACTOR_DELETED_PHISICALLY);
 			} else {
-				throw new NotFoundException(ACTOR_NOT_FOUND);
+				log.error(LogsConstants.ACTOR_NOT_FOUND);
+				throw new NotFoundException(LogsConstants.ACTOR_NOT_FOUND);
 			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}

@@ -6,6 +6,7 @@ public class RestConstants {
 	public static final String ACTORS = "/actors";
 	public static final String ACTOR_ID = "/actor/{id}";
 	public static final String ACTOR_NAME = "/name/{name}";
+	public static final String ACTOR_DELETE = "/actor/delete/{id}";
 
 	public static final String AWARD = "/award";
 	public static final String AWARDS = "/awards";
@@ -53,6 +54,8 @@ public class RestConstants {
 
 	public static final String SUCCESS = "Success";
 	public static final String OK = "OK";
+
+	public static final String FRONTEND_URL = "http://localhost:4200/actors";
 
 	private RestConstants() {
 		throw new IllegalStateException("Utility class");

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
 import com.marsoft.adminvic.domain.response.FilmRest;
+import com.marsoft.adminvic.domain.utils.LogsConstants;
 import com.marsoft.adminvic.persistence.entity.Film;
 import com.marsoft.adminvic.persistence.repository.FilmRepository;
 
@@ -24,27 +25,25 @@ public class FilmServiceImpl implements FilmService {
 
 	private ModelMapper modelMapper = new ModelMapper();
 
-	private static final String ERROR_MESSAGE = "ERROR: ";
-	private static final String FILM_NOT_FOUND = "Film not found!";
-	private static final String FILMS_NOT_FOUND = "Films not found!";
-
 	@Autowired
 	private FilmRepository filmRepository;
 
 	@Override
 	public FilmRest getFilmById(Long id) throws AdminVicException {
-		log.info("Geting film...");
+		log.info(LogsConstants.GETTING_FILM);
 		FilmRest filmResponse = null;
 		try {
 			filmResponse = modelMapper.map(filmRepository.findById(id).orElse(null), FilmRest.class);
 			if (filmResponse != null) {
-				log.info("Film found");
+				log.info(LogsConstants.FILM_FOUND);
 			} else {
-				throw new NotFoundException(FILM_NOT_FOUND);
+				throw new NotFoundException(LogsConstants.FILM_NOT_FOUND);
 			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -53,7 +52,7 @@ public class FilmServiceImpl implements FilmService {
 
 	@Override
 	public List<FilmRest> getAllFilms() throws AdminVicException {
-		log.info("Geting all available films...");
+		log.info(LogsConstants.GETTING_ALL_FILMS);
 		List<FilmRest> filmsResponseList = null;
 		try {
 			/*
@@ -61,16 +60,18 @@ public class FilmServiceImpl implements FilmService {
 			 * N1QL. CREATE PRIMARY INDEX `adminvic_primary_index` ON
 			 * `default`:`vicod`.`dev`.`film` USING GSI;
 			 */
-			filmsResponseList = filmRepository.findAll().stream().map(film -> modelMapper.map(film, FilmRest.class))
-					.collect(Collectors.toList());
+			filmsResponseList = filmRepository.findAll().stream().filter(x -> !x.getDeleted())
+					.map(actor -> modelMapper.map(actor, FilmRest.class)).collect(Collectors.toList());
 			if (!filmsResponseList.isEmpty()) {
-				log.info("Films found");
+				log.info(LogsConstants.FILM_FOUND);
 			} else {
-				throw new NotFoundException(FILMS_NOT_FOUND);
+				throw new NotFoundException(LogsConstants.ERROR_MESSAGE);
 			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -80,16 +81,19 @@ public class FilmServiceImpl implements FilmService {
 	@Override
 	@Transactional
 	public FilmRest createFilm(FilmRest filmRest) throws AdminVicException {
-		log.info("Creating film...");
+		log.info(LogsConstants.CREATING_FILM);
 		FilmRest filmResponse = null;
 		try {
+			filmRest.setId(filmRepository.getLastId() + 1);
 			Film film = modelMapper.map(filmRest, Film.class);
 			film.setInsertDate(String.valueOf(new Date()));
 			filmResponse = modelMapper.map(filmRepository.save(film), FilmRest.class);
-			log.info("Film created");
+			log.info(LogsConstants.FILM_CREATED);
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -99,7 +103,7 @@ public class FilmServiceImpl implements FilmService {
 	@Override
 	@Transactional
 	public FilmRest updateFilm(FilmRest filmRest) throws AdminVicException {
-		log.info("Updating film...");
+		log.info(LogsConstants.UPDATING_FILM);
 		FilmRest filmResponse = modelMapper.map(filmRepository.findById(filmRest.getId()).orElse(null), FilmRest.class);
 		if (filmResponse != null) {
 			try {
@@ -107,15 +111,17 @@ public class FilmServiceImpl implements FilmService {
 				film.setUpdatedDate(String.valueOf(new Date()));
 				film = filmRepository.save(film);
 				filmResponse = modelMapper.map(film, FilmRest.class);
-				log.info("Film updated");
+				log.info(LogsConstants.FILM_UPDATED);
 			} catch (Exception e) {
+				log.error(LogsConstants.ERROR_MESSAGE);
+				log.error(e.getLocalizedMessage());
 				StringBuilder sb = new StringBuilder();
-				sb.append(ERROR_MESSAGE);
+				sb.append(LogsConstants.ERROR_MESSAGE);
 				sb.append(e.getMessage());
 				throw new NotFoundException(sb.toString());
 			}
 		} else {
-			throw new NotFoundException(FILM_NOT_FOUND);
+			throw new NotFoundException(LogsConstants.ERROR_MESSAGE);
 		}
 		return filmResponse;
 	}
@@ -123,7 +129,7 @@ public class FilmServiceImpl implements FilmService {
 	@Override
 	@Transactional
 	public FilmRest deleteFilm(Long id) throws AdminVicException {
-		log.info("Deliting film...");
+		log.info(LogsConstants.DELETING_FILM);
 		FilmRest filmResponse = null;
 		try {
 			Film film = filmRepository.findById(id).orElse(null);
@@ -131,13 +137,15 @@ public class FilmServiceImpl implements FilmService {
 				film.setDeleted(true);
 				film = filmRepository.save(film);
 				filmResponse = modelMapper.map(film, FilmRest.class);
-				log.info("Film deleted");
+				log.info(LogsConstants.FILM_DELETED);
 			} else {
-				throw new NotFoundException(FILM_NOT_FOUND);
+				throw new NotFoundException(LogsConstants.ERROR_MESSAGE);
 			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -147,20 +155,22 @@ public class FilmServiceImpl implements FilmService {
 	@Override
 	@Transactional
 	public FilmRest deleteFilmPhysically(Long id) throws AdminVicException {
-		log.info("Deliting film physically...");
+		log.info(LogsConstants.DELETING_FILM_PHISICALLY);
 		FilmRest filmResponse = null;
 		try {
 			Film film = filmRepository.findById(id).orElse(null);
 			if (film != null) {
 				filmRepository.delete(film);
 				filmResponse = modelMapper.map(film, FilmRest.class);
-				log.info("Film deleted physically");
+				log.info(LogsConstants.FILM_DELETED_PHISICALLY);
 			} else {
-				throw new NotFoundException(FILM_NOT_FOUND);
+				throw new NotFoundException(LogsConstants.ERROR_MESSAGE);
 			}
 		} catch (Exception e) {
+			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(ERROR_MESSAGE);
+			sb.append(LogsConstants.ERROR_MESSAGE);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
