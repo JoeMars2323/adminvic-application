@@ -6,7 +6,7 @@ import org.springframework.data.solr.repository.SolrCrudRepository;
 
 import com.marsoft.adminvic.persistence.solr.entity.ActorSolr;
 
-public interface ActorRepositorySolr extends SolrCrudRepository<ActorSolr, Long> {
+public interface ActorSolrRepository extends SolrCrudRepository<ActorSolr, Long> {
 
 	public List<ActorSolr> findByName(String actorName);
 

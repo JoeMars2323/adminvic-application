@@ -3,6 +3,7 @@ package com.marsoft.adminvic.domain.service;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import com.marsoft.adminvic.domain.utils.LogsConstants;
 import com.marsoft.adminvic.persistence.entity.Actor;
 import com.marsoft.adminvic.persistence.repository.ActorRepository;
 import com.marsoft.adminvic.persistence.solr.entity.ActorSolr;
-import com.marsoft.adminvic.persistence.solr.repository.ActorRepositorySolr;
+import com.marsoft.adminvic.persistence.solr.repository.ActorSolrRepository;
 
 @Service
 public class ActorServiceImpl implements ActorService {
@@ -29,14 +30,15 @@ public class ActorServiceImpl implements ActorService {
 	private ActorRepository actorRepository;
 
 	@Autowired
-	private ActorRepositorySolr actorRepositorySolr;
+	private ActorSolrRepository actorSolrRepository;
 
 	@Override
 	public ActorSolr getActorById(Long id) throws AdminVicException {
 		log.info(LogsConstants.CREATING_ACTOR);
 		ActorSolr actorResponse = null;
 		try {
-			actorResponse = modelMapper.map(actorRepository.findById(id).orElse(null), ActorSolr.class);
+			// retrieve the item only if not deleted
+			actorResponse = actorSolrRepository.findById(id).orElse(null);
 			if (actorResponse != null && !actorResponse.getDeleted()) {
 				log.info(LogsConstants.ACTOR_FOUND);
 			} else {
@@ -55,12 +57,11 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	@Override
-	// only available for search engine
 	public List<ActorSolr> getActorByName(String actorName) throws AdminVicException {
 		log.info(LogsConstants.GETTING_ACTOR);
 		List<ActorSolr> actorList;
 		try {
-			actorList = actorRepositorySolr.findByName(actorName);
+			actorList = actorSolrRepository.findByName(actorName);
 			// first search to check if is empty
 			if (!actorList.isEmpty()) {
 				for (ActorSolr a : actorList) {
@@ -94,8 +95,12 @@ public class ActorServiceImpl implements ActorService {
 		log.info(LogsConstants.GETTING_ALL_ACTORS);
 		List<ActorSolr> actorsResponseList = null;
 		try {
-			actorsResponseList = actorRepository.findAll().stream().filter(x -> !x.getDeleted())
-					.map(actor -> modelMapper.map(actor, ActorSolr.class)).collect(Collectors.toList());
+			// convert the iterable response to actors list
+			Iterable<ActorSolr> iterable = actorSolrRepository.findAll();
+			// will retrieve only if is not deleted;
+			actorsResponseList = StreamSupport.stream(iterable.spliterator(), false).filter(x -> !x.getDeleted())
+					.collect(Collectors.toList());
+
 			if (!actorsResponseList.isEmpty()) {
 				log.info(LogsConstants.ACTORS_FOUND);
 			} else {
@@ -115,14 +120,14 @@ public class ActorServiceImpl implements ActorService {
 
 	@Override
 	@Transactional
-	public ActorSolr createActor(ActorSolr actorRest) throws AdminVicException {
+	public ActorSolr createActor(ActorSolr actorsolr) throws AdminVicException {
 		log.info(LogsConstants.CREATING_ACTOR);
 		ActorSolr actorResponse = null;
 		try {
 			// add manually document id
-			actorRest.setId(actorRepository.getLastId() + 1);
+			actorsolr.setId(actorRepository.getLastId() + 1);
 
-			Actor actor = modelMapper.map(actorRest, Actor.class);
+			Actor actor = modelMapper.map(actorsolr, Actor.class);
 
 			// set variables to insert in couchbase
 			actor.setInsertDate(String.valueOf(new Date()));
@@ -132,28 +137,21 @@ public class ActorServiceImpl implements ActorService {
 			// insert in couchbase
 			actorResponse = modelMapper.map(actorRepository.save(actor), ActorSolr.class);
 
-			// check if the insertion in couchbase was successful
-			if (actorResponse != null) {
-				log.info(LogsConstants.ACTOR_CREATED);
+			// set variables to insert in solr
+			actorResponse.setInsertDate(String.valueOf(new Date()));
+			actorResponse.setDeleted(false);
+			actorResponse.setChanged(true);
 
-				ActorSolr actorSolr = modelMapper.map(actorRest, ActorSolr.class);
+			// insert in apache solr
+			actorSolrRepository.save(actorResponse);
+			log.info(LogsConstants.ACTOR_CREATED_COUCHBASE);
+			log.info(LogsConstants.ACTOR_CREATED_SOLR);
 
-				// set variables to insert in solr
-				actorSolr.setInsertDate(String.valueOf(new Date()));
-				actorSolr.setDeleted(false);
-				actorSolr.setChanged(true);
-
-				// insert in apache solr
-				actorRepositorySolr.save(actorSolr);
-			} else {
-				log.error(LogsConstants.ACTOR_NOT_CREATED);
-				throw new NotFoundException(LogsConstants.ACTOR_NOT_CREATED);
-			}
 		} catch (Exception e) {
-			log.error(LogsConstants.ERROR_MESSAGE);
+			log.error(LogsConstants.ACTOR_NOT_CREATED);
 			log.error(e.getLocalizedMessage());
 			StringBuilder sb = new StringBuilder();
-			sb.append(LogsConstants.ERROR_MESSAGE);
+			sb.append(LogsConstants.ACTOR_NOT_CREATED);
 			sb.append(e.getMessage());
 			throw new NotFoundException(sb.toString());
 		}
@@ -162,14 +160,14 @@ public class ActorServiceImpl implements ActorService {
 
 	@Override
 	@Transactional
-	public ActorSolr updateActor(ActorSolr actorRest) throws AdminVicException {
+	public ActorSolr updateActor(ActorSolr actorsolr) throws AdminVicException {
 		log.info(LogsConstants.UPDATING_ACTOR);
-		ActorSolr actorResponse = modelMapper.map(actorRepository.findById(actorRest.getId()).orElse(null),
+		ActorSolr actorResponse = modelMapper.map(actorRepository.findById(actorsolr.getId()).orElse(null),
 				ActorSolr.class);
 		if (actorResponse != null) {
 			try {
 
-				Actor actor = modelMapper.map(actorRest, Actor.class);
+				Actor actor = modelMapper.map(actorsolr, Actor.class);
 				actor.setUpdatedDate(String.valueOf(new Date()));
 				actor.setChanged(true);
 
@@ -178,12 +176,11 @@ public class ActorServiceImpl implements ActorService {
 				actorResponse = modelMapper.map(actor, ActorSolr.class);
 				log.info(LogsConstants.ACTOR_UPDATED);
 
-				ActorSolr actorSolr = modelMapper.map(actorRest, ActorSolr.class);
-				actorSolr.setUpdatedDate(String.valueOf(new Date()));
-				actorSolr.setChanged(true);
+				actorResponse.setUpdatedDate(String.valueOf(new Date()));
+				actorResponse.setChanged(true);
 
 				// update in apache solr
-				actorRepositorySolr.save(actorSolr);
+				actorSolrRepository.save(actorResponse);
 
 			} catch (Exception e) {
 				log.error(LogsConstants.ERROR_MESSAGE);
@@ -215,14 +212,11 @@ public class ActorServiceImpl implements ActorService {
 				actorResponse = modelMapper.map(actor, ActorSolr.class);
 				log.info(LogsConstants.ACTOR_DELETED);
 
-				ActorSolr actorSolr = actorRepositorySolr.findById(id).orElse(null);
-
-				if (actorSolr != null) {
+				if (actorResponse != null) {
 					// delete logically in solr
-					actorSolr.setDeleted(true);
-					actorRepositorySolr.save(actorSolr);
+					actorResponse.setDeleted(true);
+					actorSolrRepository.save(actorResponse);
 				}
-
 			} else {
 				log.error(LogsConstants.ACTOR_NOT_FOUND);
 				throw new NotFoundException(LogsConstants.ACTOR_NOT_FOUND);
@@ -249,6 +243,7 @@ public class ActorServiceImpl implements ActorService {
 				actorRepository.delete(actor);
 				actorResponse = modelMapper.map(actor, ActorSolr.class);
 				log.info(LogsConstants.ACTOR_DELETED_PHISICALLY);
+				actorSolrRepository.delete(actorResponse);
 			} else {
 				log.error(LogsConstants.ACTOR_NOT_FOUND);
 				throw new NotFoundException(LogsConstants.ACTOR_NOT_FOUND);

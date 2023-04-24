@@ -4,6 +4,6 @@ import org.springframework.data.solr.repository.SolrCrudRepository;
 
 import com.marsoft.adminvic.persistence.solr.entity.SubscriptionSolr;
 
-public interface SubscriptionRepositorySolr extends SolrCrudRepository<SubscriptionSolr, Long> {
+public interface SubscriptionSolrRepository extends SolrCrudRepository<SubscriptionSolr, Long> {
 
 }

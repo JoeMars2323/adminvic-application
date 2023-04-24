@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
-@SolrDocument(collection = "actor")
+@SolrDocument(collection = "actors")
 public class ActorSolr extends AbstractSolrEntity {
 
 	@Id

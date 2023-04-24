@@ -4,6 +4,6 @@ import org.springframework.data.solr.repository.SolrCrudRepository;
 
 import com.marsoft.adminvic.persistence.solr.entity.TvserieSolr;
 
-public interface TvserieRepositorySolr extends SolrCrudRepository<TvserieSolr, Long> {
+public interface TvserieSolrRepository extends SolrCrudRepository<TvserieSolr, Long> {
 
 }

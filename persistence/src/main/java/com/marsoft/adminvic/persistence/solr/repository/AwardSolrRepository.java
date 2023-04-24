@@ -4,6 +4,6 @@ import org.springframework.data.solr.repository.SolrCrudRepository;
 
 import com.marsoft.adminvic.persistence.solr.entity.AwardSolr;
 
-public interface AwardRepositorySolr extends SolrCrudRepository<AwardSolr, Long> {
+public interface AwardSolrRepository extends SolrCrudRepository<AwardSolr, Long> {
 
 }

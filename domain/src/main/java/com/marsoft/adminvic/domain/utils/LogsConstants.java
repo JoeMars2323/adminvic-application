@@ -10,7 +10,8 @@ public class LogsConstants {
 	public static final String ACTORS_FOUND = "Actors found!";
 	public static final String ACTORS_NOT_FOUND = "Actors not found!";
 	public static final String CREATING_ACTOR = "Creating actor...";
-	public static final String ACTOR_CREATED = "Actor created!";
+	public static final String ACTOR_CREATED_COUCHBASE = "Actor created in database!";
+	public static final String ACTOR_CREATED_SOLR = "Actor created in search ingine!";
 	public static final String ACTOR_NOT_CREATED = "Unable to create actor!";
 	public static final String UPDATING_ACTOR = "Updating actor...";
 	public static final String ACTOR_UPDATED = "Actor updated!";
