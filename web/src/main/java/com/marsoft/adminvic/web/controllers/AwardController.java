@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.response.AdminVicResponse;
-import com.marsoft.adminvic.domain.response.AwardRest;
 import com.marsoft.adminvic.domain.service.AwardService;
+import com.marsoft.adminvic.persistence.solr.entity.AwardSolr;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
 @RestController
@@ -33,42 +33,42 @@ public class AwardController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.AWARD_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<AwardRest> getAwardById(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<AwardSolr> getAwardById(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				awardService.getAwardById(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<List<AwardRest>> getAllAwards() throws AdminVicException {
+	public AdminVicResponse<List<AwardSolr>> getAllAwards() throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				awardService.getAllAwards());
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<AwardRest> createAward(@RequestBody AwardRest awardRest) throws AdminVicException {
+	public AdminVicResponse<AwardSolr> createAward(@RequestBody AwardSolr awardRest) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				awardService.createAward(awardRest));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<AwardRest> updateAward(@RequestBody AwardRest awardRest) throws AdminVicException {
+	public AdminVicResponse<AwardSolr> updateAward(@RequestBody AwardSolr awardRest) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				awardService.updateAward(awardRest));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = RestConstants.AWARD_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<AwardRest> deleteAward(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<AwardSolr> deleteAward(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				awardService.deleteAward(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.AWARD_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<AwardRest> deleteAwardPhysically(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<AwardSolr> deleteAwardPhysically(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				awardService.deleteAwardPhysically(id));
 	}

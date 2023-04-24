@@ -1,13 +1,13 @@
 package com.marsoft.adminvic.persistence.solr.repository;
 
+import java.util.List;
+
 import org.springframework.data.solr.repository.SolrCrudRepository;
 
 import com.marsoft.adminvic.persistence.solr.entity.ActorSolr;
 
-public interface ActorSolrRepository extends SolrCrudRepository<ActorSolr, Long> {
+public interface ActorRepositorySolr extends SolrCrudRepository<ActorSolr, Long> {
 
-	public ActorSolr findByName(String actorName);
-
-	public Long getLastId();
+	public List<ActorSolr> findByName(String actorName);
 
 }

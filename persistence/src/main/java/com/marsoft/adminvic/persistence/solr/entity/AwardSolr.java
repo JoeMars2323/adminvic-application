@@ -1,20 +1,23 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
-import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 @SolrDocument(collection = "award")
 public class AwardSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
+
+	@Indexed(name = "awardName", type = "string")
 	private String awardName;
-	@Field
+
+	@Indexed(name = "awardDescription", type = "string")
 	private String awardDescription;
-	@Field
+
+	@Indexed(name = "awardYear", type = "int")
 	private Integer awardYear;
 
 	public Long getId() {

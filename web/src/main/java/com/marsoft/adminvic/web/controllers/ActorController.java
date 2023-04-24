@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.ActorRest;
 import com.marsoft.adminvic.domain.service.ActorService;
 import com.marsoft.adminvic.persistence.solr.entity.ActorSolr;
 import com.marsoft.adminvic.web.utils.RestConstants;
@@ -32,43 +31,43 @@ public class ActorController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.ACTOR_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ActorRest getActorById(@PathVariable Long id) throws AdminVicException {
+	public ActorSolr getActorById(@PathVariable Long id) throws AdminVicException {
 		return actorService.getActorById(id);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.ACTOR_NAME, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ActorSolr getActorByName(@PathVariable String name) throws AdminVicException {
+	public List<ActorSolr> getActorByName(@PathVariable String name) throws AdminVicException {
 		return actorService.getActorByName(name);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ActorRest> getAllActors() throws AdminVicException {
+	public List<ActorSolr> getAllActors() throws AdminVicException {
 		return actorService.getAllActors();
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ActorRest createActor(@RequestBody ActorRest actorRest) throws AdminVicException {
+	public ActorSolr createActor(@RequestBody ActorSolr actorRest) throws AdminVicException {
 		return actorService.createActor(actorRest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ActorRest updateActor(@RequestBody ActorRest actorRest) throws AdminVicException {
+	public ActorSolr updateActor(@RequestBody ActorSolr actorRest) throws AdminVicException {
 		return actorService.updateActor(actorRest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.ACTOR_DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ActorRest deleteActor(@PathVariable Long id) throws AdminVicException {
+	public ActorSolr deleteActor(@PathVariable Long id) throws AdminVicException {
 		return actorService.deleteActor(id);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.ACTOR_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ActorRest deleteActorPhysically(@PathVariable Long id) throws AdminVicException {
+	public ActorSolr deleteActorPhysically(@PathVariable Long id) throws AdminVicException {
 		return actorService.deleteActorPhysically(id);
 	}
 

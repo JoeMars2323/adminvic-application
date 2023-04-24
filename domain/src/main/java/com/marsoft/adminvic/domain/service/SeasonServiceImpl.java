@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
-import com.marsoft.adminvic.domain.response.SeasonRest;
 import com.marsoft.adminvic.persistence.entity.Season;
 import com.marsoft.adminvic.persistence.repository.SeasonRepository;
+import com.marsoft.adminvic.persistence.solr.entity.SeasonSolr;
 
 @Service
 public class SeasonServiceImpl implements SeasonService {
@@ -32,11 +32,11 @@ public class SeasonServiceImpl implements SeasonService {
 	private SeasonRepository seasonRepository;
 
 	@Override
-	public SeasonRest getSeasonById(Long id) throws AdminVicException {
+	public SeasonSolr getSeasonById(Long id) throws AdminVicException {
 		log.info("Geting season...");
-		SeasonRest seasonResponse = null;
+		SeasonSolr seasonResponse = null;
 		try {
-			seasonResponse = modelMapper.map(seasonRepository.findById(id).orElse(null), SeasonRest.class);
+			seasonResponse = modelMapper.map(seasonRepository.findById(id).orElse(null), SeasonSolr.class);
 			if (seasonResponse != null) {
 				log.info("Season found");
 			} else {
@@ -52,9 +52,9 @@ public class SeasonServiceImpl implements SeasonService {
 	}
 
 	@Override
-	public List<SeasonRest> getAllSeasons() throws AdminVicException {
+	public List<SeasonSolr> getAllSeasons() throws AdminVicException {
 		log.info("Geting all available seasons...");
-		List<SeasonRest> seasonsResponseList = null;
+		List<SeasonSolr> seasonsResponseList = null;
 		try {
 			/*
 			 * need to create an primary index in couchbase to use findAll because it used
@@ -62,7 +62,7 @@ public class SeasonServiceImpl implements SeasonService {
 			 * `default`:`vicod`.`dev`.`season` USING GSI;
 			 */
 			seasonsResponseList = seasonRepository.findAll().stream()
-					.map(season -> modelMapper.map(season, SeasonRest.class)).collect(Collectors.toList());
+					.map(season -> modelMapper.map(season, SeasonSolr.class)).collect(Collectors.toList());
 			if (!seasonsResponseList.isEmpty()) {
 				log.info("Seasons found");
 			} else {
@@ -79,13 +79,13 @@ public class SeasonServiceImpl implements SeasonService {
 
 	@Override
 	@Transactional
-	public SeasonRest createSeason(SeasonRest seasonRest) throws AdminVicException {
+	public SeasonSolr createSeason(SeasonSolr seasonRest) throws AdminVicException {
 		log.info("Creating season...");
-		SeasonRest seasonResponse = null;
+		SeasonSolr seasonResponse = null;
 		try {
 			Season season = modelMapper.map(seasonRest, Season.class);
 			season.setInsertDate(String.valueOf(new Date()));
-			seasonResponse = modelMapper.map(seasonRepository.save(season), SeasonRest.class);
+			seasonResponse = modelMapper.map(seasonRepository.save(season), SeasonSolr.class);
 			log.info("Season created");
 		} catch (Exception e) {
 			StringBuilder sb = new StringBuilder();
@@ -98,16 +98,16 @@ public class SeasonServiceImpl implements SeasonService {
 
 	@Override
 	@Transactional
-	public SeasonRest updateSeason(SeasonRest seasonRest) throws AdminVicException {
+	public SeasonSolr updateSeason(SeasonSolr seasonRest) throws AdminVicException {
 		log.info("Updating season...");
-		SeasonRest seasonResponse = modelMapper.map(seasonRepository.findById(seasonRest.getId()).orElse(null),
-				SeasonRest.class);
+		SeasonSolr seasonResponse = modelMapper.map(seasonRepository.findById(seasonRest.getId()).orElse(null),
+				SeasonSolr.class);
 		if (seasonResponse != null) {
 			try {
 				Season season = modelMapper.map(seasonRest, Season.class);
 				season.setUpdatedDate(String.valueOf(new Date()));
 				season = seasonRepository.save(season);
-				seasonResponse = modelMapper.map(season, SeasonRest.class);
+				seasonResponse = modelMapper.map(season, SeasonSolr.class);
 				log.info("Season updated");
 			} catch (Exception e) {
 				StringBuilder sb = new StringBuilder();
@@ -123,15 +123,15 @@ public class SeasonServiceImpl implements SeasonService {
 
 	@Override
 	@Transactional
-	public SeasonRest deleteSeason(Long id) throws AdminVicException {
+	public SeasonSolr deleteSeason(Long id) throws AdminVicException {
 		log.info("Deliting season...");
-		SeasonRest seasonResponse = null;
+		SeasonSolr seasonResponse = null;
 		try {
 			Season season = seasonRepository.findById(id).orElse(null);
 			if (season != null) {
 				season.setDeleted(true);
 				season = seasonRepository.save(season);
-				seasonResponse = modelMapper.map(season, SeasonRest.class);
+				seasonResponse = modelMapper.map(season, SeasonSolr.class);
 				log.info("Season deleted");
 			} else {
 				throw new NotFoundException(SEASON_NOT_FOUND);
@@ -147,14 +147,14 @@ public class SeasonServiceImpl implements SeasonService {
 
 	@Override
 	@Transactional
-	public SeasonRest deleteSeasonPhysically(Long id) throws AdminVicException {
+	public SeasonSolr deleteSeasonPhysically(Long id) throws AdminVicException {
 		log.info("Deliting season physically...");
-		SeasonRest seasonResponse = null;
+		SeasonSolr seasonResponse = null;
 		try {
 			Season season = seasonRepository.findById(id).orElse(null);
 			if (season != null) {
 				seasonRepository.delete(season);
-				seasonResponse = modelMapper.map(season, SeasonRest.class);
+				seasonResponse = modelMapper.map(season, SeasonSolr.class);
 				log.info("Season deleted physically");
 			} else {
 				throw new NotFoundException(SEASON_NOT_FOUND);

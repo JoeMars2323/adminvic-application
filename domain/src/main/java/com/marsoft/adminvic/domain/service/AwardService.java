@@ -3,20 +3,20 @@ package com.marsoft.adminvic.domain.service;
 import java.util.List;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.AwardRest;
+import com.marsoft.adminvic.persistence.solr.entity.AwardSolr;
 
 public interface AwardService {
 
-	AwardRest getAwardById(Long id) throws AdminVicException;
+	AwardSolr getAwardById(Long id) throws AdminVicException;
 
-	List<AwardRest> getAllAwards() throws AdminVicException;
+	List<AwardSolr> getAllAwards() throws AdminVicException;
 
-	AwardRest createAward(AwardRest awardRest) throws AdminVicException;
+	AwardSolr createAward(AwardSolr awardRest) throws AdminVicException;
 
-	AwardRest updateAward(AwardRest awardRest) throws AdminVicException;
+	AwardSolr updateAward(AwardSolr awardRest) throws AdminVicException;
 
-	AwardRest deleteAward(Long id) throws AdminVicException;
+	AwardSolr deleteAward(Long id) throws AdminVicException;
 
-	AwardRest deleteAwardPhysically(Long id) throws AdminVicException;
+	AwardSolr deleteAwardPhysically(Long id) throws AdminVicException;
 
 }

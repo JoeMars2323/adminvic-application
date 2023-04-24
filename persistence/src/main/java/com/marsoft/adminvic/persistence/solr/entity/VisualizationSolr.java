@@ -1,16 +1,17 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
-import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
-@SolrDocument(collection = "visualization")
+@SolrDocument(collection = "visualisation")
 public class VisualizationSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
+
+	@Indexed(name = "visualizationType", type = "string")
 	private String visualizationType;
 
 	public Long getId() {

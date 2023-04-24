@@ -1,18 +1,20 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
-import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 @SolrDocument(collection = "subscription")
 public class SubscriptionSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
+
+	@Indexed(name = "profileId", type = "int")
 	private Integer profileId;
-	@Field
+
+	@Indexed(name = "subscriptionDate", type = "int")
 	private String subscriptionDate;
 
 	public Long getId() {

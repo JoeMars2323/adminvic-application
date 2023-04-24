@@ -3,20 +3,20 @@ package com.marsoft.adminvic.domain.service;
 import java.util.List;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.TvserieRest;
+import com.marsoft.adminvic.persistence.solr.entity.TvserieSolr;
 
 public interface TvserieService {
 
-	TvserieRest getTvserieById(Long id) throws AdminVicException;
+	TvserieSolr getTvserieById(Long id) throws AdminVicException;
 
-	List<TvserieRest> getAllTvseries() throws AdminVicException;
+	List<TvserieSolr> getAllTvseries() throws AdminVicException;
 
-	TvserieRest createTvserie(TvserieRest tvserieRest) throws AdminVicException;
+	TvserieSolr createTvserie(TvserieSolr tvserieRest) throws AdminVicException;
 
-	TvserieRest updateTvserie(TvserieRest tvserieRest) throws AdminVicException;
+	TvserieSolr updateTvserie(TvserieSolr tvserieRest) throws AdminVicException;
 
-	TvserieRest deleteTvserie(Long id) throws AdminVicException;
+	TvserieSolr deleteTvserie(Long id) throws AdminVicException;
 
-	TvserieRest deleteTvseriePhysically(Long id) throws AdminVicException;
+	TvserieSolr deleteTvseriePhysically(Long id) throws AdminVicException;
 
 }

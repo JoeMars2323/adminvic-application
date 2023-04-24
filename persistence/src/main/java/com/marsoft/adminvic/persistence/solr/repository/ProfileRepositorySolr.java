@@ -4,6 +4,6 @@ import org.springframework.data.solr.repository.SolrCrudRepository;
 
 import com.marsoft.adminvic.persistence.solr.entity.ProfileSolr;
 
-public interface ProfileSolrRepository extends SolrCrudRepository<ProfileSolr, Long> {
+public interface ProfileRepositorySolr extends SolrCrudRepository<ProfileSolr, Long> {
 
 }

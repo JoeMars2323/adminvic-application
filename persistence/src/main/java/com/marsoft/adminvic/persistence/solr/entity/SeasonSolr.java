@@ -1,22 +1,26 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
-import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 @SolrDocument(collection = "season")
 public class SeasonSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
+
+	@Indexed(name = "tvserieId", type = "int")
 	private Integer tvserieId;
-	@Field
+
+	@Indexed(name = "seasonName", type = "string")
 	private String seasonName;
-	@Field
+
+	@Indexed(name = "seasonNumber", type = "int")
 	private Integer seasonNumber;
-	@Field
+
+	@Indexed(name = "seasonYear", type = "int")
 	private Integer seasonYear;
 
 	public Long getId() {

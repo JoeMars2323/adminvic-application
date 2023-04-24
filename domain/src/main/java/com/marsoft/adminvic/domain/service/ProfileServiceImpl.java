@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
-import com.marsoft.adminvic.domain.response.ProfileRest;
 import com.marsoft.adminvic.persistence.entity.Profile;
 import com.marsoft.adminvic.persistence.repository.ProfileRepository;
+import com.marsoft.adminvic.persistence.solr.entity.ProfileSolr;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -32,11 +32,11 @@ public class ProfileServiceImpl implements ProfileService {
 	private ProfileRepository profileRepository;
 
 	@Override
-	public ProfileRest getProfileById(Long id) throws AdminVicException {
+	public ProfileSolr getProfileById(Long id) throws AdminVicException {
 		log.info("Geting profile...");
-		ProfileRest profileResponse = null;
+		ProfileSolr profileResponse = null;
 		try {
-			profileResponse = modelMapper.map(profileRepository.findById(id).orElse(null), ProfileRest.class);
+			profileResponse = modelMapper.map(profileRepository.findById(id).orElse(null), ProfileSolr.class);
 			if (profileResponse != null) {
 				log.info("Profile found");
 			} else {
@@ -52,9 +52,9 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public List<ProfileRest> getAllProfiles() throws AdminVicException {
+	public List<ProfileSolr> getAllProfiles() throws AdminVicException {
 		log.info("Geting all available profiles...");
-		List<ProfileRest> profilesResponseList = null;
+		List<ProfileSolr> profilesResponseList = null;
 		try {
 			/*
 			 * need to create an primary index in couchbase to use findAll because it used
@@ -62,7 +62,7 @@ public class ProfileServiceImpl implements ProfileService {
 			 * `default`:`vicod`.`dev`.`profile` USING GSI;
 			 */
 			profilesResponseList = profileRepository.findAll().stream()
-					.map(profile -> modelMapper.map(profile, ProfileRest.class)).collect(Collectors.toList());
+					.map(profile -> modelMapper.map(profile, ProfileSolr.class)).collect(Collectors.toList());
 			if (!profilesResponseList.isEmpty()) {
 				log.info("Profiles found");
 			} else {
@@ -79,13 +79,13 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	@Transactional
-	public ProfileRest createProfile(ProfileRest profileRest) throws AdminVicException {
+	public ProfileSolr createProfile(ProfileSolr profileRest) throws AdminVicException {
 		log.info("Creating profile...");
-		ProfileRest profileResponse = null;
+		ProfileSolr profileResponse = null;
 		try {
 			Profile profile = modelMapper.map(profileRest, Profile.class);
 			profile.setInsertDate(String.valueOf(new Date()));
-			profileResponse = modelMapper.map(profileRepository.save(profile), ProfileRest.class);
+			profileResponse = modelMapper.map(profileRepository.save(profile), ProfileSolr.class);
 			log.info("Profile created");
 		} catch (Exception e) {
 			StringBuilder sb = new StringBuilder();
@@ -98,16 +98,16 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	@Transactional
-	public ProfileRest updateProfile(ProfileRest profileRest) throws AdminVicException {
+	public ProfileSolr updateProfile(ProfileSolr profileRest) throws AdminVicException {
 		log.info("Updating profile...");
-		ProfileRest profileResponse = modelMapper.map(profileRepository.findById(profileRest.getId()).orElse(null),
-				ProfileRest.class);
+		ProfileSolr profileResponse = modelMapper.map(profileRepository.findById(profileRest.getId()).orElse(null),
+				ProfileSolr.class);
 		if (profileResponse != null) {
 			try {
 				Profile profile = modelMapper.map(profileRest, Profile.class);
 				profile.setUpdatedDate(String.valueOf(new Date()));
 				profile = profileRepository.save(profile);
-				profileResponse = modelMapper.map(profile, ProfileRest.class);
+				profileResponse = modelMapper.map(profile, ProfileSolr.class);
 				log.info("Profile updated");
 			} catch (Exception e) {
 				StringBuilder sb = new StringBuilder();
@@ -123,15 +123,15 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	@Transactional
-	public ProfileRest deleteProfile(Long id) throws AdminVicException {
+	public ProfileSolr deleteProfile(Long id) throws AdminVicException {
 		log.info("Deliting profile...");
-		ProfileRest profileResponse = null;
+		ProfileSolr profileResponse = null;
 		try {
 			Profile profile = profileRepository.findById(id).orElse(null);
 			if (profile != null) {
 				profile.setDeleted(true);
 				profile = profileRepository.save(profile);
-				profileResponse = modelMapper.map(profile, ProfileRest.class);
+				profileResponse = modelMapper.map(profile, ProfileSolr.class);
 				log.info("Profile deleted");
 			} else {
 				throw new NotFoundException(PROFILE_NOT_FOUND);
@@ -147,14 +147,14 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	@Transactional
-	public ProfileRest deleteProfilePhysically(Long id) throws AdminVicException {
+	public ProfileSolr deleteProfilePhysically(Long id) throws AdminVicException {
 		log.info("Deliting profile physically...");
-		ProfileRest profileResponse = null;
+		ProfileSolr profileResponse = null;
 		try {
 			Profile profile = profileRepository.findById(id).orElse(null);
 			if (profile != null) {
 				profileRepository.delete(profile);
-				profileResponse = modelMapper.map(profile, ProfileRest.class);
+				profileResponse = modelMapper.map(profile, ProfileSolr.class);
 				log.info("Profile deleted physically");
 			} else {
 				throw new NotFoundException(PROFILE_NOT_FOUND);

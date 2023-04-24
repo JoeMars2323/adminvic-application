@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.FilmRest;
 import com.marsoft.adminvic.domain.service.FilmService;
+import com.marsoft.adminvic.persistence.solr.entity.FilmSolr;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
 @CrossOrigin
@@ -32,37 +32,37 @@ public class FilmController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.FILM_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public FilmRest getFilmById(@PathVariable Long id) throws AdminVicException {
+	public FilmSolr getFilmById(@PathVariable Long id) throws AdminVicException {
 		return filmService.getFilmById(id);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<FilmRest> getAllFilms() throws AdminVicException {
+	public List<FilmSolr> getAllFilms() throws AdminVicException {
 		return filmService.getAllFilms();
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public FilmRest createFilm(@RequestBody FilmRest filmRest) throws AdminVicException {
+	public FilmSolr createFilm(@RequestBody FilmSolr filmRest) throws AdminVicException {
 		return filmService.createFilm(filmRest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public FilmRest updateFilm(@RequestBody FilmRest filmRest) throws AdminVicException {
+	public FilmSolr updateFilm(@RequestBody FilmSolr filmRest) throws AdminVicException {
 		return filmService.updateFilm(filmRest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = RestConstants.FILM_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public FilmRest deleteFilm(@PathVariable Long id) throws AdminVicException {
+	public FilmSolr deleteFilm(@PathVariable Long id) throws AdminVicException {
 		return filmService.deleteFilm(id);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.FILM_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public FilmRest deleteFilmPhysically(@PathVariable Long id) throws AdminVicException {
+	public FilmSolr deleteFilmPhysically(@PathVariable Long id) throws AdminVicException {
 		return filmService.deleteFilmPhysically(id);
 	}
 

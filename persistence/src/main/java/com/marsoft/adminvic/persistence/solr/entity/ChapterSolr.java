@@ -1,26 +1,32 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
-import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 @SolrDocument(collection = "chapter")
 public class ChapterSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
-	private Integer seasonId;
-	@Field
+
+	@Indexed(name = "seasonId", type = "long")
+	private Long seasonId;
+
+	@Indexed(name = "chapterName", type = "string")
 	private String chapterName;
-	@Field
+
+	@Indexed(name = "chapterNumber", type = "int")
 	private Integer chapterNumber;
-	@Field
+
+	@Indexed(name = "chapterResume", type = "string")
 	private String chapterResume;
-	@Field
+
+	@Indexed(name = "chaptaerDuration", type = "float")
 	private Float chaptaerDuration;
-	@Field
+
+	@Indexed(name = "chapterDate", type = "string")
 	private String chapterDate;
 
 	public Long getId() {
@@ -31,11 +37,11 @@ public class ChapterSolr extends AbstractSolrEntity {
 		this.id = id;
 	}
 
-	public Integer getSeasonId() {
+	public Long getSeasonId() {
 		return seasonId;
 	}
 
-	public void setSeasonId(Integer seasonId) {
+	public void setSeasonId(Long seasonId) {
 		this.seasonId = seasonId;
 	}
 

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.response.AdminVicResponse;
-import com.marsoft.adminvic.domain.response.VisualizationRest;
 import com.marsoft.adminvic.domain.service.VisualizationService;
+import com.marsoft.adminvic.persistence.solr.entity.VisualizationSolr;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
 @RestController
@@ -33,21 +33,21 @@ public class VisualizationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.VISUALIZATION_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<VisualizationRest> getVisualizationsById(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<VisualizationSolr> getVisualizationsById(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				visualizationService.getVisualizationById(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<List<VisualizationRest>> getAllVisualizations() throws AdminVicException {
+	public AdminVicResponse<List<VisualizationSolr>> getAllVisualizations() throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				visualizationService.getAllVisualizations());
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<VisualizationRest> createVisualization(@RequestBody VisualizationRest visualizationRest)
+	public AdminVicResponse<VisualizationSolr> createVisualization(@RequestBody VisualizationSolr visualizationRest)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				visualizationService.createVisualization(visualizationRest));
@@ -55,7 +55,7 @@ public class VisualizationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<VisualizationRest> updateVisualization(@RequestBody VisualizationRest visualizationRest)
+	public AdminVicResponse<VisualizationSolr> updateVisualization(@RequestBody VisualizationSolr visualizationRest)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				visualizationService.updateVisualization(visualizationRest));
@@ -63,14 +63,14 @@ public class VisualizationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = RestConstants.VISUALIZATION_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<VisualizationRest> deleteVisualization(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<VisualizationSolr> deleteVisualization(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				visualizationService.deleteVisualization(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.VISUALIZATION_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<VisualizationRest> deleteVisualizationPhysically(@PathVariable Long id)
+	public AdminVicResponse<VisualizationSolr> deleteVisualizationPhysically(@PathVariable Long id)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				visualizationService.deleteVisualizationPhysically(id));

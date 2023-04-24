@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
-import com.marsoft.adminvic.domain.response.TvserieRest;
 import com.marsoft.adminvic.domain.utils.LogsConstants;
 import com.marsoft.adminvic.persistence.entity.Tvserie;
 import com.marsoft.adminvic.persistence.repository.TvserieRepository;
+import com.marsoft.adminvic.persistence.solr.entity.TvserieSolr;
 
 @Service
 public class TvserieServiceImpl implements TvserieService {
@@ -29,11 +29,11 @@ public class TvserieServiceImpl implements TvserieService {
 	private TvserieRepository tvserieRepository;
 
 	@Override
-	public TvserieRest getTvserieById(Long id) throws AdminVicException {
+	public TvserieSolr getTvserieById(Long id) throws AdminVicException {
 		log.info(LogsConstants.GETTING_TVSERIE);
-		TvserieRest tvserieResponse = null;
+		TvserieSolr tvserieResponse = null;
 		try {
-			tvserieResponse = modelMapper.map(tvserieRepository.findById(id).orElse(null), TvserieRest.class);
+			tvserieResponse = modelMapper.map(tvserieRepository.findById(id).orElse(null), TvserieSolr.class);
 			if (tvserieResponse != null) {
 				log.info(LogsConstants.TVSERIE_FOUND);
 			} else {
@@ -51,9 +51,9 @@ public class TvserieServiceImpl implements TvserieService {
 	}
 
 	@Override
-	public List<TvserieRest> getAllTvseries() throws AdminVicException {
+	public List<TvserieSolr> getAllTvseries() throws AdminVicException {
 		log.info(LogsConstants.GETTING_ALL_TVSERIES);
-		List<TvserieRest> tvseriesResponseList = null;
+		List<TvserieSolr> tvseriesResponseList = null;
 		try {
 			/*
 			 * need to create an primary index in couchbase to use findAll because it used
@@ -61,7 +61,7 @@ public class TvserieServiceImpl implements TvserieService {
 			 * `default`:`vicod`.`dev`.`tvserie` USING GSI;
 			 */
 			tvseriesResponseList = tvserieRepository.findAll().stream().filter(x -> !x.getDeleted())
-					.map(actor -> modelMapper.map(actor, TvserieRest.class)).collect(Collectors.toList());
+					.map(actor -> modelMapper.map(actor, TvserieSolr.class)).collect(Collectors.toList());
 			if (!tvseriesResponseList.isEmpty()) {
 				log.info(LogsConstants.TVSERIE_FOUND);
 			} else {
@@ -80,14 +80,14 @@ public class TvserieServiceImpl implements TvserieService {
 
 	@Override
 	@Transactional
-	public TvserieRest createTvserie(TvserieRest tvserieRest) throws AdminVicException {
+	public TvserieSolr createTvserie(TvserieSolr tvserieRest) throws AdminVicException {
 		log.info(LogsConstants.CREATING_TVSERIE);
-		TvserieRest tvserieResponse = null;
+		TvserieSolr tvserieResponse = null;
 		try {
 			tvserieRest.setId(tvserieRepository.getLastId() + 1);
 			Tvserie tvserie = modelMapper.map(tvserieRest, Tvserie.class);
 			tvserie.setInsertDate(String.valueOf(new Date()));
-			tvserieResponse = modelMapper.map(tvserieRepository.save(tvserie), TvserieRest.class);
+			tvserieResponse = modelMapper.map(tvserieRepository.save(tvserie), TvserieSolr.class);
 			log.info(LogsConstants.TVSERIE_CREATED);
 		} catch (Exception e) {
 			log.error(LogsConstants.ERROR_MESSAGE);
@@ -102,16 +102,16 @@ public class TvserieServiceImpl implements TvserieService {
 
 	@Override
 	@Transactional
-	public TvserieRest updateTvserie(TvserieRest tvserieRest) throws AdminVicException {
+	public TvserieSolr updateTvserie(TvserieSolr tvserieRest) throws AdminVicException {
 		log.info(LogsConstants.UPDATING_TVSERIE);
-		TvserieRest tvserieResponse = modelMapper.map(tvserieRepository.findById(tvserieRest.getId()).orElse(null),
-				TvserieRest.class);
+		TvserieSolr tvserieResponse = modelMapper.map(tvserieRepository.findById(tvserieRest.getId()).orElse(null),
+				TvserieSolr.class);
 		if (tvserieResponse != null) {
 			try {
 				Tvserie tvserie = modelMapper.map(tvserieRest, Tvserie.class);
 				tvserie.setUpdatedDate(String.valueOf(new Date()));
 				tvserie = tvserieRepository.save(tvserie);
-				tvserieResponse = modelMapper.map(tvserie, TvserieRest.class);
+				tvserieResponse = modelMapper.map(tvserie, TvserieSolr.class);
 				log.info(LogsConstants.TVSERIE_UPDATED);
 			} catch (Exception e) {
 				log.error(LogsConstants.ERROR_MESSAGE);
@@ -129,15 +129,15 @@ public class TvserieServiceImpl implements TvserieService {
 
 	@Override
 	@Transactional
-	public TvserieRest deleteTvserie(Long id) throws AdminVicException {
+	public TvserieSolr deleteTvserie(Long id) throws AdminVicException {
 		log.info(LogsConstants.DELETING_TVSERIE);
-		TvserieRest tvserieResponse = null;
+		TvserieSolr tvserieResponse = null;
 		try {
 			Tvserie tvserie = tvserieRepository.findById(id).orElse(null);
 			if (tvserie != null) {
 				tvserie.setDeleted(true);
 				tvserie = tvserieRepository.save(tvserie);
-				tvserieResponse = modelMapper.map(tvserie, TvserieRest.class);
+				tvserieResponse = modelMapper.map(tvserie, TvserieSolr.class);
 				log.info(LogsConstants.TVSERIE_DELETED);
 			} else {
 				throw new NotFoundException(LogsConstants.TVSERIE_NOT_FOUND);
@@ -155,14 +155,14 @@ public class TvserieServiceImpl implements TvserieService {
 
 	@Override
 	@Transactional
-	public TvserieRest deleteTvseriePhysically(Long id) throws AdminVicException {
+	public TvserieSolr deleteTvseriePhysically(Long id) throws AdminVicException {
 		log.info(LogsConstants.DELETING_TVSERIE_PHISICALLY);
-		TvserieRest tvserieResponse = null;
+		TvserieSolr tvserieResponse = null;
 		try {
 			Tvserie tvserie = tvserieRepository.findById(id).orElse(null);
 			if (tvserie != null) {
 				tvserieRepository.delete(tvserie);
-				tvserieResponse = modelMapper.map(tvserie, TvserieRest.class);
+				tvserieResponse = modelMapper.map(tvserie, TvserieSolr.class);
 				log.info(LogsConstants.TVSERIE_DELETED_PHISICALLY);
 			} else {
 				throw new NotFoundException(LogsConstants.TVSERIE_NOT_FOUND);

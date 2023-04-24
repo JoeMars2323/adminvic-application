@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
-import com.marsoft.adminvic.domain.response.ChapterRest;
 import com.marsoft.adminvic.persistence.entity.Chapter;
 import com.marsoft.adminvic.persistence.repository.ChapterRepository;
+import com.marsoft.adminvic.persistence.solr.entity.ChapterSolr;
 
 @Service
 public class ChapterServiceImpl implements ChapterService {
@@ -32,11 +32,11 @@ public class ChapterServiceImpl implements ChapterService {
 	private ChapterRepository chapterRepository;
 
 	@Override
-	public ChapterRest getChapterById(Long id) throws AdminVicException {
+	public ChapterSolr getChapterById(Long id) throws AdminVicException {
 		log.info("Geting chapter...");
-		ChapterRest chapterResponse = null;
+		ChapterSolr chapterResponse = null;
 		try {
-			chapterResponse = modelMapper.map(chapterRepository.findById(id).orElse(null), ChapterRest.class);
+			chapterResponse = modelMapper.map(chapterRepository.findById(id).orElse(null), ChapterSolr.class);
 			if (chapterResponse != null) {
 				log.info("Chapter found");
 			} else {
@@ -52,9 +52,9 @@ public class ChapterServiceImpl implements ChapterService {
 	}
 
 	@Override
-	public List<ChapterRest> getAllChapters() throws AdminVicException {
+	public List<ChapterSolr> getAllChapters() throws AdminVicException {
 		log.info("Geting all available chapters...");
-		List<ChapterRest> chaptersResponseList = null;
+		List<ChapterSolr> chaptersResponseList = null;
 		try {
 			/*
 			 * need to create an primary index in couchbase to use findAll because it used
@@ -62,7 +62,7 @@ public class ChapterServiceImpl implements ChapterService {
 			 * `default`:`adminvic`.`dev`.`chapter` USING GSI;
 			 */
 			chaptersResponseList = chapterRepository.findAll().stream()
-					.map(chapter -> modelMapper.map(chapter, ChapterRest.class)).collect(Collectors.toList());
+					.map(chapter -> modelMapper.map(chapter, ChapterSolr.class)).collect(Collectors.toList());
 			if (!chaptersResponseList.isEmpty()) {
 				log.info("Chapters found");
 			} else {
@@ -79,13 +79,13 @@ public class ChapterServiceImpl implements ChapterService {
 
 	@Override
 	@Transactional
-	public ChapterRest createChapter(ChapterRest chapterRest) throws AdminVicException {
+	public ChapterSolr createChapter(ChapterSolr chapterRest) throws AdminVicException {
 		log.info("Creating chapter...");
-		ChapterRest chapterResponse = null;
+		ChapterSolr chapterResponse = null;
 		try {
 			Chapter chapter = modelMapper.map(chapterRest, Chapter.class);
 			chapter.setInsertDate(String.valueOf(new Date()));
-			chapterResponse = modelMapper.map(chapterRepository.save(chapter), ChapterRest.class);
+			chapterResponse = modelMapper.map(chapterRepository.save(chapter), ChapterSolr.class);
 			log.info("Chapter created");
 		} catch (Exception e) {
 			StringBuilder sb = new StringBuilder();
@@ -98,16 +98,16 @@ public class ChapterServiceImpl implements ChapterService {
 
 	@Override
 	@Transactional
-	public ChapterRest updateChapter(ChapterRest chapterRest) throws AdminVicException {
+	public ChapterSolr updateChapter(ChapterSolr chapterRest) throws AdminVicException {
 		log.info("Updating chapter...");
-		ChapterRest chapterResponse = modelMapper.map(chapterRepository.findById(chapterRest.getId()).orElse(null),
-				ChapterRest.class);
+		ChapterSolr chapterResponse = modelMapper.map(chapterRepository.findById(chapterRest.getId()).orElse(null),
+				ChapterSolr.class);
 		if (chapterResponse != null) {
 			try {
 				Chapter chapter = modelMapper.map(chapterRest, Chapter.class);
 				chapter.setUpdatedDate(String.valueOf(new Date()));
 				chapter = chapterRepository.save(chapter);
-				chapterResponse = modelMapper.map(chapter, ChapterRest.class);
+				chapterResponse = modelMapper.map(chapter, ChapterSolr.class);
 				log.info("Chapter updated");
 			} catch (Exception e) {
 				StringBuilder sb = new StringBuilder();
@@ -123,15 +123,15 @@ public class ChapterServiceImpl implements ChapterService {
 
 	@Override
 	@Transactional
-	public ChapterRest deleteChapter(Long id) throws AdminVicException {
+	public ChapterSolr deleteChapter(Long id) throws AdminVicException {
 		log.info("Deliting chapter...");
-		ChapterRest chapterResponse = null;
+		ChapterSolr chapterResponse = null;
 		try {
 			Chapter chapter = chapterRepository.findById(id).orElse(null);
 			if (chapter != null) {
 				chapter.setDeleted(true);
 				chapter = chapterRepository.save(chapter);
-				chapterResponse = modelMapper.map(chapter, ChapterRest.class);
+				chapterResponse = modelMapper.map(chapter, ChapterSolr.class);
 				log.info("Chapter deleted");
 			} else {
 				throw new NotFoundException(CHAPTER_NOT_FOUND);
@@ -147,14 +147,14 @@ public class ChapterServiceImpl implements ChapterService {
 
 	@Override
 	@Transactional
-	public ChapterRest deleteChapterPhysically(Long id) throws AdminVicException {
+	public ChapterSolr deleteChapterPhysically(Long id) throws AdminVicException {
 		log.info("Deliting chapter physically...");
-		ChapterRest chapterResponse = null;
+		ChapterSolr chapterResponse = null;
 		try {
 			Chapter chapter = chapterRepository.findById(id).orElse(null);
 			if (chapter != null) {
 				chapterRepository.delete(chapter);
-				chapterResponse = modelMapper.map(chapter, ChapterRest.class);
+				chapterResponse = modelMapper.map(chapter, ChapterSolr.class);
 				log.info("Chapter deleted physically");
 			} else {
 				throw new NotFoundException(CHAPTER_NOT_FOUND);

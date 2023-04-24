@@ -1,22 +1,26 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.couchbase.core.mapping.Field;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 @SolrDocument(collection = "film")
 public class FilmSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
+
+	@Indexed(name = "recomendedAgeId", type = "int")
 	private Integer recomendedAgeId;
-	@Field
+
+	@Indexed(name = "filmName", type = "string")
 	private String filmName;
-	@Field
+
+	@Indexed(name = "filmDescription", type = "string")
 	private String filmDescription;
-	@Field
+
+	@Indexed(name = "filmYear", type = "int")
 	private Integer filmYear;
 
 	public Long getId() {
@@ -47,7 +51,7 @@ public class FilmSolr extends AbstractSolrEntity {
 		return filmDescription;
 	}
 
-	public void setFilmDescription(String filmDescription) {
+	public void setTvserieDescription(String filmDescription) {
 		this.filmDescription = filmDescription;
 	}
 

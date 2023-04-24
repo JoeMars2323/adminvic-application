@@ -4,6 +4,6 @@ import org.springframework.data.solr.repository.SolrCrudRepository;
 
 import com.marsoft.adminvic.persistence.solr.entity.CategorySolr;
 
-public interface CategorySolrRepository extends SolrCrudRepository<CategorySolr, Long> {
+public interface CategoryRepositorySolr extends SolrCrudRepository<CategorySolr, Long> {
 
 }

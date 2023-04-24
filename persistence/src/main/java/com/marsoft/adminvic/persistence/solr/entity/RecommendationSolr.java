@@ -1,22 +1,26 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
-import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 @SolrDocument(collection = "recomendation")
 public class RecommendationSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
+
+	@Indexed(name = "visualizationId", type = "int")
 	private Integer visualizationId;
-	@Field
+
+	@Indexed(name = "categoryId", type = "int")
 	private Integer categoryId;
-	@Field
+
+	@Indexed(name = "recomendationId", type = "int")
 	private Integer recomendationId;
-	@Field
+
+	@Indexed(name = "percentageMatch", type = "int")
 	private Integer percentageMatch;
 
 	public Long getId() {

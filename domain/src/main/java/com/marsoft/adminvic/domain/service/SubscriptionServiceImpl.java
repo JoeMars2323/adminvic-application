@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
-import com.marsoft.adminvic.domain.response.SubscriptionRest;
 import com.marsoft.adminvic.persistence.entity.Subscription;
 import com.marsoft.adminvic.persistence.repository.SubscriptionRepository;
+import com.marsoft.adminvic.persistence.solr.entity.SubscriptionSolr;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
@@ -32,12 +32,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private SubscriptionRepository subscriptionRepository;
 
 	@Override
-	public SubscriptionRest getSubscriptionById(Long id) throws AdminVicException {
+	public SubscriptionSolr getSubscriptionById(Long id) throws AdminVicException {
 		log.info("Geting subscription...");
-		SubscriptionRest subscriptionResponse = null;
+		SubscriptionSolr subscriptionResponse = null;
 		try {
 			subscriptionResponse = modelMapper.map(subscriptionRepository.findById(id).orElse(null),
-					SubscriptionRest.class);
+					SubscriptionSolr.class);
 			if (subscriptionResponse != null) {
 				log.info("Subscription found");
 			} else {
@@ -53,9 +53,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
-	public List<SubscriptionRest> getAllSubscriptions() throws AdminVicException {
+	public List<SubscriptionSolr> getAllSubscriptions() throws AdminVicException {
 		log.info("Geting all available subscriptions...");
-		List<SubscriptionRest> subscriptionsResponseList = null;
+		List<SubscriptionSolr> subscriptionsResponseList = null;
 		try {
 			/*
 			 * need to create an primary index in couchbase to use findAll because it used
@@ -63,7 +63,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			 * `default`:`vicod`.`dev`.`subscription` USING GSI;
 			 */
 			subscriptionsResponseList = subscriptionRepository.findAll().stream()
-					.map(subscription -> modelMapper.map(subscription, SubscriptionRest.class))
+					.map(subscription -> modelMapper.map(subscription, SubscriptionSolr.class))
 					.collect(Collectors.toList());
 			if (!subscriptionsResponseList.isEmpty()) {
 				log.info("Subscriptions found");
@@ -81,13 +81,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Override
 	@Transactional
-	public SubscriptionRest createSubscription(SubscriptionRest subscriptionRest) throws AdminVicException {
+	public SubscriptionSolr createSubscription(SubscriptionSolr subscriptionRest) throws AdminVicException {
 		log.info("Creating subscription...");
-		SubscriptionRest subscriptionResponse = null;
+		SubscriptionSolr subscriptionResponse = null;
 		try {
 			Subscription subscription = modelMapper.map(subscriptionRest, Subscription.class);
 			subscription.setInsertDate(String.valueOf(new Date()));
-			subscriptionResponse = modelMapper.map(subscriptionRepository.save(subscription), SubscriptionRest.class);
+			subscriptionResponse = modelMapper.map(subscriptionRepository.save(subscription), SubscriptionSolr.class);
 			log.info("Subscription created");
 		} catch (Exception e) {
 			StringBuilder sb = new StringBuilder();
@@ -100,16 +100,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Override
 	@Transactional
-	public SubscriptionRest updateSubscription(SubscriptionRest subscriptionRest) throws AdminVicException {
+	public SubscriptionSolr updateSubscription(SubscriptionSolr subscriptionRest) throws AdminVicException {
 		log.info("Updating subscription...");
-		SubscriptionRest subscriptionResponse = modelMapper
-				.map(subscriptionRepository.findById(subscriptionRest.getId()).orElse(null), SubscriptionRest.class);
+		SubscriptionSolr subscriptionResponse = modelMapper
+				.map(subscriptionRepository.findById(subscriptionRest.getId()).orElse(null), SubscriptionSolr.class);
 		if (subscriptionResponse != null) {
 			try {
 				Subscription subscription = modelMapper.map(subscriptionRest, Subscription.class);
 				subscription.setUpdatedDate(String.valueOf(new Date()));
 				subscription = subscriptionRepository.save(subscription);
-				subscriptionResponse = modelMapper.map(subscription, SubscriptionRest.class);
+				subscriptionResponse = modelMapper.map(subscription, SubscriptionSolr.class);
 				log.info("Subscription updated");
 			} catch (Exception e) {
 				StringBuilder sb = new StringBuilder();
@@ -125,15 +125,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Override
 	@Transactional
-	public SubscriptionRest deleteSubscription(Long id) throws AdminVicException {
+	public SubscriptionSolr deleteSubscription(Long id) throws AdminVicException {
 		log.info("Deliting subscription...");
-		SubscriptionRest subscriptionResponse = null;
+		SubscriptionSolr subscriptionResponse = null;
 		try {
 			Subscription subscription = subscriptionRepository.findById(id).orElse(null);
 			if (subscription != null) {
 				subscription.setDeleted(true);
 				subscription = subscriptionRepository.save(subscription);
-				subscriptionResponse = modelMapper.map(subscription, SubscriptionRest.class);
+				subscriptionResponse = modelMapper.map(subscription, SubscriptionSolr.class);
 				log.info("Subscription deleted");
 			} else {
 				throw new NotFoundException(SUBSCRIPTION_NOT_FOUND);
@@ -149,14 +149,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Override
 	@Transactional
-	public SubscriptionRest deleteSubscriptionPhysically(Long id) throws AdminVicException {
+	public SubscriptionSolr deleteSubscriptionPhysically(Long id) throws AdminVicException {
 		log.info("Deliting subscription physically...");
-		SubscriptionRest subscriptionResponse = null;
+		SubscriptionSolr subscriptionResponse = null;
 		try {
 			Subscription subscription = subscriptionRepository.findById(id).orElse(null);
 			if (subscription != null) {
 				subscriptionRepository.delete(subscription);
-				subscriptionResponse = modelMapper.map(subscription, SubscriptionRest.class);
+				subscriptionResponse = modelMapper.map(subscription, SubscriptionSolr.class);
 				log.info("Subscription deleted physically");
 			} else {
 				throw new NotFoundException(SUBSCRIPTION_NOT_FOUND);

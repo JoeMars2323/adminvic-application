@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
-import com.marsoft.adminvic.domain.response.VisualizationRest;
 import com.marsoft.adminvic.persistence.entity.Visualization;
 import com.marsoft.adminvic.persistence.repository.VisualizationRepository;
+import com.marsoft.adminvic.persistence.solr.entity.VisualizationSolr;
 
 @Service
 public class VisualizationServiceImpl implements VisualizationService {
@@ -32,12 +32,12 @@ public class VisualizationServiceImpl implements VisualizationService {
 	private VisualizationRepository visualizationRepository;
 
 	@Override
-	public VisualizationRest getVisualizationById(Long id) throws AdminVicException {
+	public VisualizationSolr getVisualizationById(Long id) throws AdminVicException {
 		log.info("Geting visualization...");
-		VisualizationRest visualizationResponse = null;
+		VisualizationSolr visualizationResponse = null;
 		try {
 			visualizationResponse = modelMapper.map(visualizationRepository.findById(id).orElse(null),
-					VisualizationRest.class);
+					VisualizationSolr.class);
 			if (visualizationResponse != null) {
 				log.info("Visualization found");
 			} else {
@@ -53,9 +53,9 @@ public class VisualizationServiceImpl implements VisualizationService {
 	}
 
 	@Override
-	public List<VisualizationRest> getAllVisualizations() throws AdminVicException {
+	public List<VisualizationSolr> getAllVisualizations() throws AdminVicException {
 		log.info("Geting all available visualizations...");
-		List<VisualizationRest> visualizationsResponseList = null;
+		List<VisualizationSolr> visualizationsResponseList = null;
 		try {
 			/*
 			 * need to create an primary index in couchbase to use findAll because it used
@@ -63,7 +63,7 @@ public class VisualizationServiceImpl implements VisualizationService {
 			 * `default`:`vicod`.`dev`.`visualization` USING GSI;
 			 */
 			visualizationsResponseList = visualizationRepository.findAll().stream()
-					.map(visualization -> modelMapper.map(visualization, VisualizationRest.class))
+					.map(visualization -> modelMapper.map(visualization, VisualizationSolr.class))
 					.collect(Collectors.toList());
 			if (!visualizationsResponseList.isEmpty()) {
 				log.info("Visualizations found");
@@ -81,14 +81,14 @@ public class VisualizationServiceImpl implements VisualizationService {
 
 	@Override
 	@Transactional
-	public VisualizationRest createVisualization(VisualizationRest visualizationRest) throws AdminVicException {
+	public VisualizationSolr createVisualization(VisualizationSolr visualizationRest) throws AdminVicException {
 		log.info("Creating visualization...");
-		VisualizationRest visualizationResponse = null;
+		VisualizationSolr visualizationResponse = null;
 		try {
 			Visualization visualization = modelMapper.map(visualizationRest, Visualization.class);
 			visualization.setInsertDate(String.valueOf(new Date()));
 			visualizationResponse = modelMapper.map(visualizationRepository.save(visualization),
-					VisualizationRest.class);
+					VisualizationSolr.class);
 			log.info("Visualization created");
 		} catch (Exception e) {
 			StringBuilder sb = new StringBuilder();
@@ -101,16 +101,16 @@ public class VisualizationServiceImpl implements VisualizationService {
 
 	@Override
 	@Transactional
-	public VisualizationRest updateVisualization(VisualizationRest visualizationRest) throws AdminVicException {
+	public VisualizationSolr updateVisualization(VisualizationSolr visualizationRest) throws AdminVicException {
 		log.info("Updating visualization...");
-		VisualizationRest visualizationResponse = modelMapper
-				.map(visualizationRepository.findById(visualizationRest.getId()).orElse(null), VisualizationRest.class);
+		VisualizationSolr visualizationResponse = modelMapper
+				.map(visualizationRepository.findById(visualizationRest.getId()).orElse(null), VisualizationSolr.class);
 		if (visualizationResponse != null) {
 			try {
 				Visualization visualization = modelMapper.map(visualizationRest, Visualization.class);
 				visualization.setUpdatedDate(String.valueOf(new Date()));
 				visualization = visualizationRepository.save(visualization);
-				visualizationResponse = modelMapper.map(visualization, VisualizationRest.class);
+				visualizationResponse = modelMapper.map(visualization, VisualizationSolr.class);
 				log.info("Visualization updated");
 			} catch (Exception e) {
 				StringBuilder sb = new StringBuilder();
@@ -126,15 +126,15 @@ public class VisualizationServiceImpl implements VisualizationService {
 
 	@Override
 	@Transactional
-	public VisualizationRest deleteVisualization(Long id) throws AdminVicException {
+	public VisualizationSolr deleteVisualization(Long id) throws AdminVicException {
 		log.info("Deliting visualization...");
-		VisualizationRest visualizationResponse = null;
+		VisualizationSolr visualizationResponse = null;
 		try {
 			Visualization visualization = visualizationRepository.findById(id).orElse(null);
 			if (visualization != null) {
 				visualization.setDeleted(true);
 				visualization = visualizationRepository.save(visualization);
-				visualizationResponse = modelMapper.map(visualization, VisualizationRest.class);
+				visualizationResponse = modelMapper.map(visualization, VisualizationSolr.class);
 				log.info("Visualization deleted");
 			} else {
 				throw new NotFoundException(VISUALIZARION_NOT_FOUND);
@@ -150,14 +150,14 @@ public class VisualizationServiceImpl implements VisualizationService {
 
 	@Override
 	@Transactional
-	public VisualizationRest deleteVisualizationPhysically(Long id) throws AdminVicException {
+	public VisualizationSolr deleteVisualizationPhysically(Long id) throws AdminVicException {
 		log.info("Deliting visualization physically...");
-		VisualizationRest visualizationResponse = null;
+		VisualizationSolr visualizationResponse = null;
 		try {
 			Visualization visualization = visualizationRepository.findById(id).orElse(null);
 			if (visualization != null) {
 				visualizationRepository.delete(visualization);
-				visualizationResponse = modelMapper.map(visualization, VisualizationRest.class);
+				visualizationResponse = modelMapper.map(visualization, VisualizationSolr.class);
 				log.info("Visualization deleted physically");
 			} else {
 				throw new NotFoundException(VISUALIZARION_NOT_FOUND);

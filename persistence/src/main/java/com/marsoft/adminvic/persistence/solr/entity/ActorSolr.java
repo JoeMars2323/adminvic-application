@@ -1,30 +1,38 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
-import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 @SolrDocument(collection = "actor")
 public class ActorSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
-	private String actorName;
-	@Field
+
+	@Indexed(name = "name", type = "string")
+	private String name;
+
+	@Indexed(name = "actorBirthName", type = "string")
 	private String actorBirthName;
-	@Field
+
+	@Indexed(name = "actorNickname", type = "string")
 	private String actorNickname;
-	@Field
+
+	@Indexed(name = "actorCountry", type = "string")
 	private String actorCountry;
-	@Field
+
+	@Indexed(name = "actorCity", type = "string")
 	private String actorCity;
-	@Field
+
+	@Indexed(name = "actorBirthDate", type = "string")
 	private String actorBirthDate;
-	@Field
+
+	@Indexed(name = "actorHeight", type = "string")
 	private String actorHeight;
-	@Field
+
+	@Indexed(name = "actorBiography", type = "string")
 	private String actorBiography;
 
 	public Long getId() {
@@ -36,11 +44,11 @@ public class ActorSolr extends AbstractSolrEntity {
 	}
 
 	public String getActorName() {
-		return actorName;
+		return name;
 	}
 
 	public void setActorName(String actorName) {
-		this.actorName = actorName;
+		this.name = actorName;
 	}
 
 	public String getActorBirthName() {

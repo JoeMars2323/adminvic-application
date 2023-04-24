@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.response.AdminVicResponse;
-import com.marsoft.adminvic.domain.response.SubscriptionRest;
 import com.marsoft.adminvic.domain.service.SubscriptionService;
+import com.marsoft.adminvic.persistence.solr.entity.SubscriptionSolr;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
 @RestController
@@ -33,21 +33,21 @@ public class SubscriptionController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.SUBSCRIPTION_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SubscriptionRest> getSubscriptionsById(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<SubscriptionSolr> getSubscriptionsById(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				subscriptionService.getSubscriptionById(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<List<SubscriptionRest>> getAllSubscriptions() throws AdminVicException {
+	public AdminVicResponse<List<SubscriptionSolr>> getAllSubscriptions() throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				subscriptionService.getAllSubscriptions());
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SubscriptionRest> createSubscription(@RequestBody SubscriptionRest subscriptionRest)
+	public AdminVicResponse<SubscriptionSolr> createSubscription(@RequestBody SubscriptionSolr subscriptionRest)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				subscriptionService.createSubscription(subscriptionRest));
@@ -55,7 +55,7 @@ public class SubscriptionController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SubscriptionRest> updateSubscription(@RequestBody SubscriptionRest subscriptionRest)
+	public AdminVicResponse<SubscriptionSolr> updateSubscription(@RequestBody SubscriptionSolr subscriptionRest)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				subscriptionService.updateSubscription(subscriptionRest));
@@ -63,14 +63,14 @@ public class SubscriptionController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = RestConstants.SUBSCRIPTION_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SubscriptionRest> deleteSubscription(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<SubscriptionSolr> deleteSubscription(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				subscriptionService.deleteSubscription(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.SUBSCRIPTION_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SubscriptionRest> deleteSubscriptionPhysically(@PathVariable Long id)
+	public AdminVicResponse<SubscriptionSolr> deleteSubscriptionPhysically(@PathVariable Long id)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				subscriptionService.deleteSubscriptionPhysically(id));

@@ -1,16 +1,17 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.couchbase.core.mapping.Field;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 @SolrDocument(collection = "profile")
 public class ProfileSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
+
+	@Indexed(name = "profileType", type = "string")
 	private String profileType;
 
 	public Long getId() {

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.response.AdminVicResponse;
-import com.marsoft.adminvic.domain.response.RecommendedAgeRest;
 import com.marsoft.adminvic.domain.service.RecommendedAgeService;
+import com.marsoft.adminvic.persistence.solr.entity.RecommendedAgeSolr;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
 @RestController
@@ -33,21 +33,21 @@ public class RecommendedAgeController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.RECOMMENDED_AGE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendedAgeRest> getRecommendedAgesById(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<RecommendedAgeSolr> getRecommendedAgesById(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendedAgeService.getRecommendedAgeById(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<List<RecommendedAgeRest>> getAllRecommendedAges() throws AdminVicException {
+	public AdminVicResponse<List<RecommendedAgeSolr>> getAllRecommendedAges() throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendedAgeService.getAllRecommendedAges());
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendedAgeRest> createRecommendedAge(@RequestBody RecommendedAgeRest recommendedAgeRest)
+	public AdminVicResponse<RecommendedAgeSolr> createRecommendedAge(@RequestBody RecommendedAgeSolr recommendedAgeRest)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendedAgeService.createRecommendedAge(recommendedAgeRest));
@@ -55,7 +55,7 @@ public class RecommendedAgeController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendedAgeRest> updateRecommendedAge(@RequestBody RecommendedAgeRest recommendedAgeRest)
+	public AdminVicResponse<RecommendedAgeSolr> updateRecommendedAge(@RequestBody RecommendedAgeSolr recommendedAgeRest)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendedAgeService.updateRecommendedAge(recommendedAgeRest));
@@ -63,14 +63,14 @@ public class RecommendedAgeController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = RestConstants.RECOMMENDED_AGE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendedAgeRest> deleteRecommendedAge(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<RecommendedAgeSolr> deleteRecommendedAge(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendedAgeService.deleteRecommendedAge(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.RECOMMENDED_AGE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendedAgeRest> deleteRecommendedAgePhysically(@PathVariable Long id)
+	public AdminVicResponse<RecommendedAgeSolr> deleteRecommendedAgePhysically(@PathVariable Long id)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendedAgeService.deleteRecommendedAgePhysically(id));

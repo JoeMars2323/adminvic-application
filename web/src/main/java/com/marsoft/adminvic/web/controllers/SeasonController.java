@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.response.AdminVicResponse;
-import com.marsoft.adminvic.domain.response.SeasonRest;
 import com.marsoft.adminvic.domain.service.SeasonService;
+import com.marsoft.adminvic.persistence.solr.entity.SeasonSolr;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
 @RestController
@@ -33,42 +33,42 @@ public class SeasonController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.SEASON_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SeasonRest> getSeasonsById(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<SeasonSolr> getSeasonsById(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				seasonService.getSeasonById(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<List<SeasonRest>> getAllSeasons() throws AdminVicException {
+	public AdminVicResponse<List<SeasonSolr>> getAllSeasons() throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				seasonService.getAllSeasons());
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SeasonRest> createSeason(@RequestBody SeasonRest seasonRest) throws AdminVicException {
+	public AdminVicResponse<SeasonSolr> createSeason(@RequestBody SeasonSolr seasonRest) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				seasonService.createSeason(seasonRest));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SeasonRest> updateSeason(@RequestBody SeasonRest seasonRest) throws AdminVicException {
+	public AdminVicResponse<SeasonSolr> updateSeason(@RequestBody SeasonSolr seasonRest) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				seasonService.updateSeason(seasonRest));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = RestConstants.SEASON_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SeasonRest> deleteSeason(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<SeasonSolr> deleteSeason(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				seasonService.deleteSeason(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.SEASON_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<SeasonRest> deleteSeasonPhysically(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<SeasonSolr> deleteSeasonPhysically(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				seasonService.deleteSeasonPhysically(id));
 	}

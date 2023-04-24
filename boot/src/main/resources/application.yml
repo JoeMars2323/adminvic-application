@@ -18,6 +18,8 @@ spring:
   data:
     couchbase:
       auto-index: true
+    solr:
+      host: http://localhost:8983/solr
   main:
     allow-bean-definition-overriding: true
   mvc:

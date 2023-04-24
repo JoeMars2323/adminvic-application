@@ -3,20 +3,20 @@ package com.marsoft.adminvic.domain.service;
 import java.util.List;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.SeasonRest;
+import com.marsoft.adminvic.persistence.solr.entity.SeasonSolr;
 
 public interface SeasonService {
 
-	SeasonRest getSeasonById(Long id) throws AdminVicException;
+	SeasonSolr getSeasonById(Long id) throws AdminVicException;
 
-	List<SeasonRest> getAllSeasons() throws AdminVicException;
+	List<SeasonSolr> getAllSeasons() throws AdminVicException;
 
-	SeasonRest createSeason(SeasonRest seasonRest) throws AdminVicException;
+	SeasonSolr createSeason(SeasonSolr seasonRest) throws AdminVicException;
 
-	SeasonRest updateSeason(SeasonRest seasonRest) throws AdminVicException;
+	SeasonSolr updateSeason(SeasonSolr seasonRest) throws AdminVicException;
 
-	SeasonRest deleteSeason(Long id) throws AdminVicException;
+	SeasonSolr deleteSeason(Long id) throws AdminVicException;
 
-	SeasonRest deleteSeasonPhysically(Long id) throws AdminVicException;
+	SeasonSolr deleteSeasonPhysically(Long id) throws AdminVicException;
 
 }

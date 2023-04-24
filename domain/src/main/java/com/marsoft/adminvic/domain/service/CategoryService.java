@@ -3,20 +3,20 @@ package com.marsoft.adminvic.domain.service;
 import java.util.List;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.CategoryRest;
+import com.marsoft.adminvic.persistence.solr.entity.CategorySolr;
 
 public interface CategoryService {
 
-	CategoryRest getCategoryById(Long id) throws AdminVicException;
+	CategorySolr getCategoryById(Long id) throws AdminVicException;
 
-	List<CategoryRest> getAllCategories() throws AdminVicException;
+	List<CategorySolr> getAllCategories() throws AdminVicException;
 
-	CategoryRest createCategory(CategoryRest actorRest) throws AdminVicException;
+	CategorySolr createCategory(CategorySolr actorRest) throws AdminVicException;
 
-	CategoryRest updateCategory(CategoryRest actorRest) throws AdminVicException;
+	CategorySolr updateCategory(CategorySolr actorRest) throws AdminVicException;
 
-	CategoryRest deleteCategory(Long id) throws AdminVicException;
+	CategorySolr deleteCategory(Long id) throws AdminVicException;
 
-	CategoryRest deleteCategoryPhysically(Long id) throws AdminVicException;
+	CategorySolr deleteCategoryPhysically(Long id) throws AdminVicException;
 
 }

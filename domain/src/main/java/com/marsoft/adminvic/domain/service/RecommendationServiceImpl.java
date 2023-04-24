@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.exception.NotFoundException;
-import com.marsoft.adminvic.domain.response.RecommendationRest;
 import com.marsoft.adminvic.persistence.entity.Recommendation;
 import com.marsoft.adminvic.persistence.repository.RecommendationRepository;
+import com.marsoft.adminvic.persistence.solr.entity.RecommendationSolr;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
@@ -32,12 +32,12 @@ public class RecommendationServiceImpl implements RecommendationService {
 	private RecommendationRepository recommendationRepository;
 
 	@Override
-	public RecommendationRest getRecommendationById(Long id) throws AdminVicException {
+	public RecommendationSolr getRecommendationById(Long id) throws AdminVicException {
 		log.info("Geting recommendation...");
-		RecommendationRest recommendationResponse = null;
+		RecommendationSolr recommendationResponse = null;
 		try {
 			recommendationResponse = modelMapper.map(recommendationRepository.findById(id).orElse(null),
-					RecommendationRest.class);
+					RecommendationSolr.class);
 			if (recommendationResponse != null) {
 				log.info("Recommendation found");
 			} else {
@@ -53,9 +53,9 @@ public class RecommendationServiceImpl implements RecommendationService {
 	}
 
 	@Override
-	public List<RecommendationRest> getAllRecommendations() throws AdminVicException {
+	public List<RecommendationSolr> getAllRecommendations() throws AdminVicException {
 		log.info("Geting all available recommendations...");
-		List<RecommendationRest> recommendationsResponseList = null;
+		List<RecommendationSolr> recommendationsResponseList = null;
 		try {
 			/*
 			 * need to create an primary index in couchbase to use findAll because it used
@@ -63,7 +63,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 			 * `default`:`vicod`.`dev`.`recommendation` USING GSI;
 			 */
 			recommendationsResponseList = recommendationRepository.findAll().stream()
-					.map(recommendation -> modelMapper.map(recommendation, RecommendationRest.class))
+					.map(recommendation -> modelMapper.map(recommendation, RecommendationSolr.class))
 					.collect(Collectors.toList());
 			if (!recommendationsResponseList.isEmpty()) {
 				log.info("Recommendations found");
@@ -81,14 +81,14 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 	@Override
 	@Transactional
-	public RecommendationRest createRecommendation(RecommendationRest recommendationRest) throws AdminVicException {
+	public RecommendationSolr createRecommendation(RecommendationSolr recommendationRest) throws AdminVicException {
 		log.info("Creating recommendation...");
-		RecommendationRest recommendationResponse = null;
+		RecommendationSolr recommendationResponse = null;
 		try {
 			Recommendation recommendation = modelMapper.map(recommendationRest, Recommendation.class);
 			recommendation.setInsertDate(String.valueOf(new Date()));
 			recommendationResponse = modelMapper.map(recommendationRepository.save(recommendation),
-					RecommendationRest.class);
+					RecommendationSolr.class);
 			log.info("Recommendation created");
 		} catch (Exception e) {
 			StringBuilder sb = new StringBuilder();
@@ -101,16 +101,16 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 	@Override
 	@Transactional
-	public RecommendationRest updateRecommendation(RecommendationRest recommendationRest) throws AdminVicException {
+	public RecommendationSolr updateRecommendation(RecommendationSolr recommendationRest) throws AdminVicException {
 		log.info("Updating recommendation...");
-		RecommendationRest recommendationResponse = modelMapper.map(
-				recommendationRepository.findById(recommendationRest.getId()).orElse(null), RecommendationRest.class);
+		RecommendationSolr recommendationResponse = modelMapper.map(
+				recommendationRepository.findById(recommendationRest.getId()).orElse(null), RecommendationSolr.class);
 		if (recommendationResponse != null) {
 			try {
 				Recommendation recommendation = modelMapper.map(recommendationRest, Recommendation.class);
 				recommendation.setUpdatedDate(String.valueOf(new Date()));
 				recommendation = recommendationRepository.save(recommendation);
-				recommendationResponse = modelMapper.map(recommendation, RecommendationRest.class);
+				recommendationResponse = modelMapper.map(recommendation, RecommendationSolr.class);
 				log.info("Recommendation updated");
 			} catch (Exception e) {
 				StringBuilder sb = new StringBuilder();
@@ -126,15 +126,15 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 	@Override
 	@Transactional
-	public RecommendationRest deleteRecommendation(Long id) throws AdminVicException {
+	public RecommendationSolr deleteRecommendation(Long id) throws AdminVicException {
 		log.info("Deliting recommendation...");
-		RecommendationRest recommendationResponse = null;
+		RecommendationSolr recommendationResponse = null;
 		try {
 			Recommendation recommendation = recommendationRepository.findById(id).orElse(null);
 			if (recommendation != null) {
 				recommendation.setDeleted(true);
 				recommendation = recommendationRepository.save(recommendation);
-				recommendationResponse = modelMapper.map(recommendation, RecommendationRest.class);
+				recommendationResponse = modelMapper.map(recommendation, RecommendationSolr.class);
 				log.info("Recommendation deleted");
 			} else {
 				throw new NotFoundException(RECOMMENDATION_NOT_FOUND);
@@ -150,14 +150,14 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 	@Override
 	@Transactional
-	public RecommendationRest deleteRecommendationPhysically(Long id) throws AdminVicException {
+	public RecommendationSolr deleteRecommendationPhysically(Long id) throws AdminVicException {
 		log.info("Deliting recommendation physically...");
-		RecommendationRest recommendationResponse = null;
+		RecommendationSolr recommendationResponse = null;
 		try {
 			Recommendation recommendation = recommendationRepository.findById(id).orElse(null);
 			if (recommendation != null) {
 				recommendationRepository.delete(recommendation);
-				recommendationResponse = modelMapper.map(recommendation, RecommendationRest.class);
+				recommendationResponse = modelMapper.map(recommendation, RecommendationSolr.class);
 				log.info("Recommendation deleted physically");
 			} else {
 				throw new NotFoundException(RECOMMENDATION_NOT_FOUND);

@@ -1,18 +1,20 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
-import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
-@SolrDocument(collection = "recommended_age")
+@SolrDocument(collection = "recommendedAge")
 public class RecommendedAgeSolr extends AbstractSolrEntity {
 
 	@Id
-	@Field
+	@Indexed(name = "id", type = "long")
 	private Long id;
-	@Field
+
+	@Indexed(name = "recommendedAge", type = "string")
 	private String recommendedAge;
-	@Field
+
+	@Indexed(name = "recommendedAgeDescription", type = "string")
 	private String recommendedAgeDescription;
 
 	public Long getId() {

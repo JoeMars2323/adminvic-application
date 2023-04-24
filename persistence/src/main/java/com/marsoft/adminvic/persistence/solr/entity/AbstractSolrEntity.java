@@ -1,21 +1,23 @@
 package com.marsoft.adminvic.persistence.solr.entity;
 
-import org.apache.solr.client.solrj.beans.Field;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 @SolrDocument
 public abstract class AbstractSolrEntity {
 
-	@Field
+	@Indexed(name = "insertDate", type = "string")
 	private String insertDate;
-	@Field
+
+	@Indexed(name = "updatedDate", type = "string")
 	private String updatedDate;
-	@Field
+
+	@Indexed(name = "deleted", type = "boolean")
 	private Boolean deleted;
-	@Field
+
+	@Indexed(name = "changed", type = "boolean")
 	private Boolean changed;
 
-	@Field
 	public String getInsertDate() {
 		return insertDate;
 	}

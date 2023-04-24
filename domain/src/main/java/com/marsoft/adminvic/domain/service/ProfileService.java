@@ -3,20 +3,20 @@ package com.marsoft.adminvic.domain.service;
 import java.util.List;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.ProfileRest;
+import com.marsoft.adminvic.persistence.solr.entity.ProfileSolr;
 
 public interface ProfileService {
 
-	ProfileRest getProfileById(Long id) throws AdminVicException;
+	ProfileSolr getProfileById(Long id) throws AdminVicException;
 
-	List<ProfileRest> getAllProfiles() throws AdminVicException;
+	List<ProfileSolr> getAllProfiles() throws AdminVicException;
 
-	ProfileRest createProfile(ProfileRest profileRest) throws AdminVicException;
+	ProfileSolr createProfile(ProfileSolr profileRest) throws AdminVicException;
 
-	ProfileRest updateProfile(ProfileRest profileRest) throws AdminVicException;
+	ProfileSolr updateProfile(ProfileSolr profileRest) throws AdminVicException;
 
-	ProfileRest deleteProfile(Long id) throws AdminVicException;
+	ProfileSolr deleteProfile(Long id) throws AdminVicException;
 
-	ProfileRest deleteProfilePhysically(Long id) throws AdminVicException;
+	ProfileSolr deleteProfilePhysically(Long id) throws AdminVicException;
 
 }

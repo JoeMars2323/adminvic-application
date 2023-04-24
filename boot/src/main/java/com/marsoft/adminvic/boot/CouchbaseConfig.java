@@ -1,11 +1,15 @@
 package com.marsoft.adminvic.boot;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.convert.CustomConversions;
 import org.springframework.data.couchbase.config.AbstractCouchbaseConfiguration;
 import org.springframework.data.couchbase.repository.config.EnableCouchbaseRepositories;
 
 @Configuration
+@ComponentScan
 @EnableCouchbaseRepositories("com.marsoft.adminvic.persistence.repository")
 public class CouchbaseConfig extends AbstractCouchbaseConfiguration {
 
@@ -39,6 +43,12 @@ public class CouchbaseConfig extends AbstractCouchbaseConfiguration {
 	@Override
 	public String getPassword() {
 		return password;
+	}
+
+	@Bean
+	@Override
+	public CustomConversions customConversions() {
+		return super.customConversions();
 	}
 
 }

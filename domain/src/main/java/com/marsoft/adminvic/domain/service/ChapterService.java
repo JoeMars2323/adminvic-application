@@ -3,20 +3,20 @@ package com.marsoft.adminvic.domain.service;
 import java.util.List;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
-import com.marsoft.adminvic.domain.response.ChapterRest;
+import com.marsoft.adminvic.persistence.solr.entity.ChapterSolr;
 
 public interface ChapterService {
 
-	ChapterRest getChapterById(Long id) throws AdminVicException;
+	ChapterSolr getChapterById(Long id) throws AdminVicException;
 
-	List<ChapterRest> getAllChapters() throws AdminVicException;
+	List<ChapterSolr> getAllChapters() throws AdminVicException;
 
-	ChapterRest createChapter(ChapterRest chapterRest) throws AdminVicException;
+	ChapterSolr createChapter(ChapterSolr chapterRest) throws AdminVicException;
 
-	ChapterRest updateChapter(ChapterRest chapterRest) throws AdminVicException;
+	ChapterSolr updateChapter(ChapterSolr chapterRest) throws AdminVicException;
 
-	ChapterRest deleteChapter(Long id) throws AdminVicException;
+	ChapterSolr deleteChapter(Long id) throws AdminVicException;
 
-	ChapterRest deleteChapterPhysically(Long id) throws AdminVicException;
+	ChapterSolr deleteChapterPhysically(Long id) throws AdminVicException;
 
 }

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marsoft.adminvic.domain.exception.AdminVicException;
 import com.marsoft.adminvic.domain.response.AdminVicResponse;
-import com.marsoft.adminvic.domain.response.RecommendationRest;
 import com.marsoft.adminvic.domain.service.RecommendationService;
+import com.marsoft.adminvic.persistence.solr.entity.RecommendationSolr;
 import com.marsoft.adminvic.web.utils.RestConstants;
 
 @RestController
@@ -33,21 +33,21 @@ public class RecommendationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = RestConstants.RECOMMENDATION_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendationRest> getRecommendationsById(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<RecommendationSolr> getRecommendationsById(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendationService.getRecommendationById(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<List<RecommendationRest>> getAllRecommendations() throws AdminVicException {
+	public AdminVicResponse<List<RecommendationSolr>> getAllRecommendations() throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendationService.getAllRecommendations());
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendationRest> createRecommendation(@RequestBody RecommendationRest recommendationRest)
+	public AdminVicResponse<RecommendationSolr> createRecommendation(@RequestBody RecommendationSolr recommendationRest)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendationService.createRecommendation(recommendationRest));
@@ -55,7 +55,7 @@ public class RecommendationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendationRest> updateRecommendation(@RequestBody RecommendationRest recommendationRest)
+	public AdminVicResponse<RecommendationSolr> updateRecommendation(@RequestBody RecommendationSolr recommendationRest)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendationService.updateRecommendation(recommendationRest));
@@ -63,14 +63,14 @@ public class RecommendationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = RestConstants.RECOMMENDATION_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendationRest> deleteRecommendation(@PathVariable Long id) throws AdminVicException {
+	public AdminVicResponse<RecommendationSolr> deleteRecommendation(@PathVariable Long id) throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendationService.deleteRecommendation(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = RestConstants.RECOMMENDATION_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AdminVicResponse<RecommendationRest> deleteRecommendationPhysically(@PathVariable Long id)
+	public AdminVicResponse<RecommendationSolr> deleteRecommendationPhysically(@PathVariable Long id)
 			throws AdminVicException {
 		return new AdminVicResponse<>(RestConstants.SUCCESS, String.valueOf(HttpStatus.OK), RestConstants.OK,
 				recommendationService.deleteRecommendationPhysically(id));
